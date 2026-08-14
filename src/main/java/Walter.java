@@ -20,7 +20,7 @@ public class Walter {
         System.out.println("What can I do for you?");
         System.out.println(separator);
 
-        String[] tasks = new String[100];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
@@ -42,8 +42,14 @@ public class Walter {
                         System.out.println((i + 1) + ". " + tasks[i]);
                     }
                 }
+            } else if (command.startsWith("done ")) {
+                int taskNumber = Integer.parseInt(command.substring(5));
+                Task task = tasks[taskNumber - 1];
+                task.markAsDone();
+                System.out.println("Walter has marked this task as done:");
+                System.out.println(task);
             } else if (taskCount < tasks.length) {
-                tasks[taskCount] = command;
+                tasks[taskCount] = new Task(command);
                 taskCount++;
                 System.out.println("Walter has added " + command + " to the list.");
             } else {
