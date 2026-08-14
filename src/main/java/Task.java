@@ -23,12 +23,19 @@ public class Task {
     }
 
     /**
+     * Marks this task as not completed.
+     */
+    public void markAsNotDone() {
+        this.isDone = false;
+    }
+
+    /**
      * Returns the icon representing this task's completion status.
      *
-     * @return A tick if done, or a cross if not done.
+     * @return {@code X} if done, or a blank space if not done.
      */
     public String getStatusIcon() {
-        return this.isDone ? "✓" : "✗";
+        return this.isDone ? "X" : " ";
     }
 
     @Override

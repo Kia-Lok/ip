@@ -42,11 +42,17 @@ public class Walter {
                         System.out.println((i + 1) + ". " + tasks[i]);
                     }
                 }
-            } else if (command.startsWith("done ")) {
+            } else if (command.startsWith("mark ")) {
                 int taskNumber = Integer.parseInt(command.substring(5));
                 Task task = tasks[taskNumber - 1];
                 task.markAsDone();
                 System.out.println("Walter has marked this task as done:");
+                System.out.println(task);
+            } else if (command.startsWith("unmark ")) {
+                int taskNumber = Integer.parseInt(command.substring(7));
+                Task task = tasks[taskNumber - 1];
+                task.markAsNotDone();
+                System.out.println("Walter has marked this task as not done yet:");
                 System.out.println(task);
             } else if (taskCount < tasks.length) {
                 tasks[taskCount] = new Task(command);
