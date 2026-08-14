@@ -1,6 +1,6 @@
 ---
 name: test-ui
-description: Record and run fail-fast console UI tests for this Java chatbot. Use when given commands and expected outputs to test, when asked to maintain test/ui-test-plan.md, or when asked to verify the application's terminal interaction and show a test-session transcript.
+description: Maintain and run fail-fast console UI tests for this Java chatbot. Use after every application-code update to inspect and update test/ui-test-plan.md when needed, run the complete UI regression plan, and show the console transcript. Also use when given commands and expected outputs or asked to verify terminal interaction.
 ---
 
 # Test UI
@@ -8,6 +8,18 @@ description: Record and run fail-fast console UI tests for this Java chatbot. Us
 Record console test cases in `test/ui-test-plan.md`, execute them in order,
 compare every command's response exactly, and show the resulting input/output
 transcript.
+
+## Required after code updates
+
+1. Invoke this skill after every change to application code and before reporting
+   the change as complete.
+2. Inspect the code diff and `test/ui-test-plan.md` together.
+3. Update the plan when commands, responses, formatting, state transitions, or
+   other observable console behaviour changed. Add a regression case when the
+   code fixes a console bug or adds a new command path.
+4. Leave the plan unchanged when existing cases already cover the change, and
+   state that decision in the final report.
+5. Run the complete plan even when no plan update was needed.
 
 ## Maintain the test plan
 

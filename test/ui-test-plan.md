@@ -31,7 +31,7 @@ Expected responses omit the surrounding separator lines.
         ["Walter has added return book to the list."],
         ["Walter has added buy bread to the list."],
         [
-          "Here are the current items on your list:",
+          "Here are the tasks in your list:",
           "1. [ ] read book",
           "2. [ ] return book",
           "3. [ ] buy bread"
@@ -41,7 +41,7 @@ Expected responses omit the surrounding separator lines.
           "[X] return book"
         ],
         [
-          "Here are the current items on your list:",
+          "Here are the tasks in your list:",
           "1. [ ] read book",
           "2. [X] return book",
           "3. [ ] buy bread"
@@ -51,10 +51,78 @@ Expected responses omit the surrounding separator lines.
           "[ ] return book"
         ],
         [
-          "Here are the current items on your list:",
+          "Here are the tasks in your list:",
           "1. [ ] read book",
           "2. [ ] return book",
           "3. [ ] buy bread"
+        ],
+        ["Walter: Bye. Hope to see you again soon!"]
+      ]
+    },
+    {
+      "id": "typed-task-lifecycle",
+      "aim": "Verify Todo, Deadline, and Event creation, polymorphic listing, and the done command.",
+      "inputs": [
+        "todo borrow book",
+        "deadline return book /by Sunday",
+        "event project meeting /at Mon 2-4pm",
+        "list",
+        "done 2",
+        "list",
+        "bye"
+      ],
+      "expected_outputs": [
+        [
+          "Walter has added this task:",
+          "[T][ ] borrow book",
+          "Now you have 1 task in the list."
+        ],
+        [
+          "Walter has added this task:",
+          "[D][ ] return book (by: Sunday)",
+          "Now you have 2 tasks in the list."
+        ],
+        [
+          "Walter has added this task:",
+          "[E][ ] project meeting (at: Mon 2-4pm)",
+          "Now you have 3 tasks in the list."
+        ],
+        [
+          "Here are the tasks in your list:",
+          "1. [T][ ] borrow book",
+          "2. [D][ ] return book (by: Sunday)",
+          "3. [E][ ] project meeting (at: Mon 2-4pm)"
+        ],
+        [
+          "Walter has marked this task as done:",
+          "[D][X] return book (by: Sunday)"
+        ],
+        [
+          "Here are the tasks in your list:",
+          "1. [T][ ] borrow book",
+          "2. [D][X] return book (by: Sunday)",
+          "3. [E][ ] project meeting (at: Mon 2-4pm)"
+        ],
+        ["Walter: Bye. Hope to see you again soon!"]
+      ]
+    },
+    {
+      "id": "event-from-to",
+      "aim": "Verify an event with /from and /to is parsed, stored, and listed without crashing.",
+      "inputs": [
+        "event project meeting /from Mon 2pm /to 4pm",
+        "list",
+        "bye"
+      ],
+      "expected_outputs": [
+        [
+          "Walter has added this task:",
+          "[E][ ] project meeting (from: Mon 2pm to: 4pm)",
+          "Now you have 1 task in the list."
+        ],
+        [
+          "Here are the tasks in your list:",
+          "1. [E][ ] project meeting (from: Mon 2pm to: 4pm)"
         ],
         ["Walter: Bye. Hope to see you again soon!"]
       ]

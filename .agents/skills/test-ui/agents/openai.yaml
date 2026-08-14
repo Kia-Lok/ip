@@ -1,4 +1,4 @@
 interface:
   display_name: "Test UI"
-  short_description: "Run fail-fast console UI test plans"
-  default_prompt: "Use $test-ui to record and run console UI test cases for this project."
+  short_description: "Run required post-change UI regression tests"
+  default_prompt: "Use $test-ui after the current code update: update the UI test plan if needed, run every case, and report the transcript."
