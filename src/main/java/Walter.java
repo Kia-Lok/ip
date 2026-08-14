@@ -4,8 +4,10 @@ import java.util.Scanner;
  * The entry point for the Walter chatbot.
  */
 public class Walter {
+    private static final String SEPARATOR = "____________________________________________________________";
+    private static final int MAX_TASKS = 100;
+
     public static void main(String[] args) {
-        String separator = "____________________________________________________________";
         String banner = """
                 ██╗    ██╗ █████╗ ██╗  ████████╗███████╗██████╗
                 ██║    ██║██╔══██╗██║  ╚══██╔══╝██╔════╝██╔══██╗
@@ -14,97 +16,245 @@ public class Walter {
                 ╚███╔███╔╝██║  ██║███████╗██║   ███████╗██║  ██║
                  ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝╚═╝   ╚══════╝╚═╝  ╚═╝
                 """;
-        System.out.println(separator);
+        System.out.println(SEPARATOR);
         System.out.print(banner);
         System.out.println("Howdy! I'm Walter!");
         System.out.println("What can I do for you?");
-        System.out.println(separator);
+        System.out.println(SEPARATOR);
 
-        Task[] tasks = new Task[100];
+        Task[] tasks = new Task[MAX_TASKS];
         int taskCount = 0;
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
-            System.out.println(separator);
+            String command = scanner.nextLine().strip();
+            System.out.println(SEPARATOR);
 
             if (command.equals("bye")) {
                 System.out.println("Walter: Bye. Hope to see you again soon!");
-                System.out.println(separator);
+                System.out.println(SEPARATOR);
                 break;
             }
 
-            if (command.equals("list")) {
-                if (taskCount == 0) {
-                    System.out.println("There are currently no items on your list.");
-                } else {
-                    System.out.println("Here are the tasks in your list:");
-                    for (int i = 0; i < taskCount; i++) {
-                        System.out.println((i + 1) + ". " + tasks[i]);
-                    }
-                }
-            } else if (command.startsWith("mark ") || command.startsWith("done ")) {
-                int taskNumber = Integer.parseInt(command.substring(5));
-                Task task = tasks[taskNumber - 1];
-                task.markAsDone();
-                System.out.println("Walter has marked this task as done:");
-                System.out.println(task);
-            } else if (command.startsWith("unmark ")) {
-                int taskNumber = Integer.parseInt(command.substring(7));
-                Task task = tasks[taskNumber - 1];
-                task.markAsNotDone();
-                System.out.println("Walter has marked this task as not done yet:");
-                System.out.println(task);
-            } else if (command.startsWith("todo ")) {
-                Task task = new Todo(command.substring(5));
-                taskCount = addTypedTask(tasks, taskCount, task);
-            } else if (command.startsWith("deadline ")) {
-                String taskDetails = command.substring(9);
-                int delimiterIndex = taskDetails.indexOf(" /by ");
-                String description = taskDetails.substring(0, delimiterIndex);
-                String by = taskDetails.substring(delimiterIndex + 5);
-                Task task = new Deadline(description, by);
-                taskCount = addTypedTask(tasks, taskCount, task);
-            } else if (command.startsWith("event ")) {
-                String taskDetails = command.substring(6);
-                Task task;
-                int atDelimiterIndex = taskDetails.indexOf(" /at ");
-                if (atDelimiterIndex >= 0) {
-                    String description = taskDetails.substring(0, atDelimiterIndex);
-                    String at = taskDetails.substring(atDelimiterIndex + 5);
-                    task = new Event(description, at);
-                } else {
-                    int fromDelimiterIndex = taskDetails.indexOf(" /from ");
-                    int toDelimiterIndex = taskDetails.indexOf(" /to ", fromDelimiterIndex + 7);
-                    String description = taskDetails.substring(0, fromDelimiterIndex);
-                    String from = taskDetails.substring(fromDelimiterIndex + 7, toDelimiterIndex);
-                    String to = taskDetails.substring(toDelimiterIndex + 5);
-                    task = new Event(description, from, to);
-                }
-                taskCount = addTypedTask(tasks, taskCount, task);
-            } else if (taskCount < tasks.length) {
-                tasks[taskCount] = new Task(command);
-                taskCount++;
-                System.out.println("Walter has added " + command + " to the list.");
-            } else {
-                System.out.println("Walter: Your task list is full.");
+            try {
+                taskCount = executeCommand(command, tasks, taskCount);
+            } catch (DukeException exception) {
+                System.out.println(exception.getMessage());
             }
-
-            System.out.println(separator);
+            System.out.println(SEPARATOR);
         }
     }
 
     /**
-     * Adds a typed task and displays its representation and the updated task count.
+     * Executes one non-exit command after validating its arguments.
      *
+     * @param command User command with leading and trailing whitespace removed.
      * @param tasks Array storing all tasks.
      * @param taskCount Current number of stored tasks.
-     * @param task Task to add.
      * @return Updated number of stored tasks.
+     * @throws DukeException If the command or any argument is invalid.
      */
-    private static int addTypedTask(Task[] tasks, int taskCount, Task task) {
-        if (taskCount >= tasks.length) {
-            System.out.println("Walter: Your task list is full.");
+    private static int executeCommand(String command, Task[] tasks, int taskCount)
+            throws DukeException {
+        if (command.isBlank()) {
+            throw new DukeException("Command cannot be blank.");
+        }
+
+        if (command.equals("list")) {
+            printTaskList(tasks, taskCount);
             return taskCount;
+        }
+        if (isCommand(command, "done") || isCommand(command, "mark")) {
+            Task task = getTask(command, tasks, taskCount);
+            task.markAsDone();
+            System.out.println("Walter has marked this task as done:");
+            System.out.println(task);
+            return taskCount;
+        }
+        if (isCommand(command, "unmark")) {
+            Task task = getTask(command, tasks, taskCount);
+            task.markAsNotDone();
+            System.out.println("Walter has marked this task as not done yet:");
+            System.out.println(task);
+            return taskCount;
+        }
+        if (isCommand(command, "todo")) {
+            return addTask(tasks, taskCount, parseTodo(command));
+        }
+        if (isCommand(command, "deadline")) {
+            return addTask(tasks, taskCount, parseDeadline(command));
+        }
+        if (isCommand(command, "event")) {
+            return addTask(tasks, taskCount, parseEvent(command));
+        }
+
+        throw new DukeException("Unknown command.");
+    }
+
+    /**
+     * Checks whether input is exactly a command word or is followed by whitespace and arguments.
+     */
+    private static boolean isCommand(String input, String commandWord) {
+        return input.equals(commandWord)
+                || input.startsWith(commandWord)
+                && input.length() > commandWord.length()
+                && Character.isWhitespace(input.charAt(commandWord.length()));
+    }
+
+    /**
+     * Finds a delimiter that appears as a complete whitespace-separated token.
+     */
+    private static int findDelimiter(String text, String delimiter, int fromIndex) {
+        int delimiterIndex = text.indexOf(delimiter, fromIndex);
+        while (delimiterIndex >= 0) {
+            int delimiterEnd = delimiterIndex + delimiter.length();
+            boolean hasValidStart = delimiterIndex == 0
+                    || Character.isWhitespace(text.charAt(delimiterIndex - 1));
+            boolean hasValidEnd = delimiterEnd == text.length()
+                    || Character.isWhitespace(text.charAt(delimiterEnd));
+            if (hasValidStart && hasValidEnd) {
+                return delimiterIndex;
+            }
+            delimiterIndex = text.indexOf(delimiter, delimiterEnd);
+        }
+        return -1;
+    }
+
+    /**
+     * Prints all stored tasks in their user-facing order.
+     */
+    private static void printTaskList(Task[] tasks, int taskCount) {
+        if (taskCount == 0) {
+            System.out.println("There are currently no items on your list.");
+            return;
+        }
+
+        System.out.println("Here are the tasks in your list:");
+        for (int i = 0; i < taskCount; i++) {
+            System.out.println((i + 1) + ". " + tasks[i]);
+        }
+    }
+
+    /**
+     * Parses and validates a Todo command without changing task state.
+     */
+    private static Todo parseTodo(String command) throws DukeException {
+        String description = command.substring("todo".length()).strip();
+        if (description.isEmpty()) {
+            throw new DukeException("Todo description cannot be empty.");
+        }
+        return new Todo(description);
+    }
+
+    /**
+     * Parses and validates a Deadline command without changing task state.
+     */
+    private static Deadline parseDeadline(String command) throws DukeException {
+        String taskDetails = command.substring("deadline".length()).strip();
+        if (taskDetails.isEmpty()) {
+            throw new DukeException("Deadline description cannot be empty.");
+        }
+
+        int delimiterIndex = findDelimiter(taskDetails, "/by", 0);
+        if (delimiterIndex < 0) {
+            throw new DukeException("Deadline requires /by.");
+        }
+
+        String description = taskDetails.substring(0, delimiterIndex).strip();
+        String by = taskDetails.substring(delimiterIndex + "/by".length()).strip();
+        if (description.isEmpty()) {
+            throw new DukeException("Deadline description cannot be empty.");
+        }
+        if (by.isEmpty()) {
+            throw new DukeException("Deadline date/time cannot be empty.");
+        }
+        return new Deadline(description, by);
+    }
+
+    /**
+     * Parses and validates either supported Event command format.
+     */
+    private static Event parseEvent(String command) throws DukeException {
+        String taskDetails = command.substring("event".length()).strip();
+        if (taskDetails.isEmpty()) {
+            throw new DukeException("Event description cannot be empty.");
+        }
+
+        int atDelimiterIndex = findDelimiter(taskDetails, "/at", 0);
+        if (atDelimiterIndex >= 0) {
+            String description = taskDetails.substring(0, atDelimiterIndex).strip();
+            String at = taskDetails.substring(atDelimiterIndex + "/at".length()).strip();
+            if (description.isEmpty()) {
+                throw new DukeException("Event description cannot be empty.");
+            }
+            if (at.isEmpty()) {
+                throw new DukeException("Event date/time cannot be empty.");
+            }
+            return new Event(description, at);
+        }
+
+        int fromDelimiterIndex = findDelimiter(taskDetails, "/from", 0);
+        if (fromDelimiterIndex < 0) {
+            if (findDelimiter(taskDetails, "/to", 0) >= 0) {
+                throw new DukeException("Event requires /from command when given /to command.");
+            }
+            throw new DukeException("Event requires /at or /from and /to.");
+        }
+        int toDelimiterIndex = findDelimiter(
+                taskDetails, "/to", fromDelimiterIndex + "/from".length());
+        if (toDelimiterIndex < 0) {
+            throw new DukeException("Event requires /to command when given /from command.");
+        }
+
+        String description = taskDetails.substring(0, fromDelimiterIndex).strip();
+        String from = taskDetails.substring(
+                fromDelimiterIndex + "/from".length(), toDelimiterIndex).strip();
+        String to = taskDetails.substring(toDelimiterIndex + "/to".length()).strip();
+        if (description.isEmpty()) {
+            throw new DukeException("Event description cannot be empty.");
+        }
+        if (from.isEmpty()) {
+            throw new DukeException("Event start cannot be empty.");
+        }
+        if (to.isEmpty()) {
+            throw new DukeException("Event end cannot be empty.");
+        }
+        return new Event(description, from, to);
+    }
+
+    /**
+     * Returns the task selected by a validated 1-based task number.
+     */
+    private static Task getTask(String command, Task[] tasks, int taskCount) throws DukeException {
+        int commandWordEnd = 0;
+        while (commandWordEnd < command.length()
+                && !Character.isWhitespace(command.charAt(commandWordEnd))) {
+            commandWordEnd++;
+        }
+        if (commandWordEnd == command.length()
+                || command.substring(commandWordEnd).isBlank()) {
+            throw new DukeException("Task number is required.");
+        }
+
+        String taskNumberText = command.substring(commandWordEnd).strip();
+        int taskNumber;
+        try {
+            taskNumber = Integer.parseInt(taskNumberText);
+        } catch (NumberFormatException exception) {
+            throw new DukeException("Task number must be an integer.");
+        }
+
+        if (taskNumber < 1 || taskNumber > taskCount) {
+            throw new DukeException("Task number is out of range.");
+        }
+        return tasks[taskNumber - 1];
+    }
+
+    /**
+     * Adds a validated task and displays its representation and the updated task count.
+     */
+    private static int addTask(Task[] tasks, int taskCount, Task task) throws DukeException {
+        if (taskCount >= tasks.length) {
+            throw new DukeException("Task list is full.");
         }
 
         tasks[taskCount] = task;

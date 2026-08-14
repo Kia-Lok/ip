@@ -14,11 +14,11 @@ Expected responses omit the surrounding separator lines.
   "test_cases": [
     {
       "id": "task-status-lifecycle",
-      "aim": "Verify adding, listing, marking, unmarking, and exiting in one stateful session.",
+      "aim": "Verify adding Todos, listing, marking, unmarking, and exiting in one stateful session.",
       "inputs": [
-        "read book",
-        "return book",
-        "buy bread",
+        "todo read book",
+        "todo return book",
+        "todo buy bread",
         "list",
         "mark 2",
         "list",
@@ -27,34 +27,46 @@ Expected responses omit the surrounding separator lines.
         "bye"
       ],
       "expected_outputs": [
-        ["Walter has added read book to the list."],
-        ["Walter has added return book to the list."],
-        ["Walter has added buy bread to the list."],
+        [
+          "Walter has added this task:",
+          "[T][ ] read book",
+          "Now you have 1 task in the list."
+        ],
+        [
+          "Walter has added this task:",
+          "[T][ ] return book",
+          "Now you have 2 tasks in the list."
+        ],
+        [
+          "Walter has added this task:",
+          "[T][ ] buy bread",
+          "Now you have 3 tasks in the list."
+        ],
         [
           "Here are the tasks in your list:",
-          "1. [ ] read book",
-          "2. [ ] return book",
-          "3. [ ] buy bread"
+          "1. [T][ ] read book",
+          "2. [T][ ] return book",
+          "3. [T][ ] buy bread"
         ],
         [
           "Walter has marked this task as done:",
-          "[X] return book"
+          "[T][X] return book"
         ],
         [
           "Here are the tasks in your list:",
-          "1. [ ] read book",
-          "2. [X] return book",
-          "3. [ ] buy bread"
+          "1. [T][ ] read book",
+          "2. [T][X] return book",
+          "3. [T][ ] buy bread"
         ],
         [
           "Walter has marked this task as not done yet:",
-          "[ ] return book"
+          "[T][ ] return book"
         ],
         [
           "Here are the tasks in your list:",
-          "1. [ ] read book",
-          "2. [ ] return book",
-          "3. [ ] buy bread"
+          "1. [T][ ] read book",
+          "2. [T][ ] return book",
+          "3. [T][ ] buy bread"
         ],
         ["Walter: Bye. Hope to see you again soon!"]
       ]
@@ -123,6 +135,175 @@ Expected responses omit the surrounding separator lines.
         [
           "Here are the tasks in your list:",
           "1. [E][ ] project meeting (from: Mon 2pm to: 4pm)"
+        ],
+        ["Walter: Bye. Hope to see you again soon!"]
+      ]
+    },
+    {
+      "id": "unknown-and-blank-commands",
+      "aim": "Verify blank input and command-prefix variants are rejected without terminating the session.",
+      "inputs": [
+        "",
+        "   ",
+        "blah",
+        "hello there",
+        "donee 1",
+        "todoooo book",
+        "listing",
+        "byebye",
+        "bye hello",
+        "list",
+        "bye"
+      ],
+      "expected_outputs": [
+        ["Command cannot be blank."],
+        ["Command cannot be blank."],
+        ["Unknown command."],
+        ["Unknown command."],
+        ["Unknown command."],
+        ["Unknown command."],
+        ["Unknown command."],
+        ["Unknown command."],
+        ["Unknown command."],
+        ["There are currently no items on your list."],
+        ["Walter: Bye. Hope to see you again soon!"]
+      ]
+    },
+    {
+      "id": "typed-command-errors",
+      "aim": "Verify malformed Todo, Deadline, and Event commands produce specific errors and do not add tasks.",
+      "inputs": [
+        "todo",
+        "todo    ",
+        "deadline",
+        "deadline return book",
+        "deadline /by Sunday",
+        "deadline return book /by",
+        "deadline report /bypass Sunday",
+        "event",
+        "event meeting",
+        "event /at Monday",
+        "event meeting /at",
+        "event meeting /atlas",
+        "event meeting /from Monday",
+        "event meeting /to 4pm",
+        "event /from Monday /to 4pm",
+        "event meeting /from /to 4pm",
+        "event meeting /from Monday /to",
+        "list",
+        "bye"
+      ],
+      "expected_outputs": [
+        ["Todo description cannot be empty."],
+        ["Todo description cannot be empty."],
+        ["Deadline description cannot be empty."],
+        ["Deadline requires /by."],
+        ["Deadline description cannot be empty."],
+        ["Deadline date/time cannot be empty."],
+        ["Deadline requires /by."],
+        ["Event description cannot be empty."],
+        ["Event requires /at or /from and /to."],
+        ["Event description cannot be empty."],
+        ["Event date/time cannot be empty."],
+        ["Event requires /at or /from and /to."],
+        ["Event requires /to command when given /from command."],
+        ["Event requires /from command when given /to command."],
+        ["Event description cannot be empty."],
+        ["Event start cannot be empty."],
+        ["Event end cannot be empty."],
+        ["There are currently no items on your list."],
+        ["Walter: Bye. Hope to see you again soon!"]
+      ]
+    },
+    {
+      "id": "task-number-errors",
+      "aim": "Verify task-number validation, whitespace handling, recovery, and state integrity.",
+      "inputs": [
+        "done 1",
+        "todo read book",
+        "done",
+        "done abc",
+        "done two",
+        "done 1.5",
+        "done !",
+        "done 0",
+        "done -1",
+        "done 999",
+        "done 1 2",
+        "done 999999999999999999999999999999999999",
+        "mark abc",
+        "unmark 2",
+        "done\t1",
+        "list",
+        "bye"
+      ],
+      "expected_outputs": [
+        ["Task number is out of range."],
+        [
+          "Walter has added this task:",
+          "[T][ ] read book",
+          "Now you have 1 task in the list."
+        ],
+        ["Task number is required."],
+        ["Task number must be an integer."],
+        ["Task number must be an integer."],
+        ["Task number must be an integer."],
+        ["Task number must be an integer."],
+        ["Task number is out of range."],
+        ["Task number is out of range."],
+        ["Task number is out of range."],
+        ["Task number must be an integer."],
+        ["Task number must be an integer."],
+        ["Task number must be an integer."],
+        ["Task number is out of range."],
+        [
+          "Walter has marked this task as done:",
+          "[T][X] read book"
+        ],
+        [
+          "Here are the tasks in your list:",
+          "1. [T][X] read book"
+        ],
+        ["Walter: Bye. Hope to see you again soon!"]
+      ]
+    },
+    {
+      "id": "recovery-after-errors",
+      "aim": "Verify expected errors are caught centrally and later valid commands preserve correct state.",
+      "inputs": [
+        "todo",
+        "todo read book",
+        "deadline return book",
+        "deadline return book /by Sunday",
+        "done abc",
+        "done 1",
+        "blah",
+        "list",
+        "bye"
+      ],
+      "expected_outputs": [
+        ["Todo description cannot be empty."],
+        [
+          "Walter has added this task:",
+          "[T][ ] read book",
+          "Now you have 1 task in the list."
+        ],
+        ["Deadline requires /by."],
+        [
+          "Walter has added this task:",
+          "[D][ ] return book (by: Sunday)",
+          "Now you have 2 tasks in the list."
+        ],
+        ["Task number must be an integer."],
+        [
+          "Walter has marked this task as done:",
+          "[T][X] read book"
+        ],
+        ["Unknown command."],
+        [
+          "Here are the tasks in your list:",
+          "1. [T][X] read book",
+          "2. [D][ ] return book (by: Sunday)"
         ],
         ["Walter: Bye. Hope to see you again soon!"]
       ]
