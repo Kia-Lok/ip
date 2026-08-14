@@ -77,6 +77,9 @@ public class Walter {
             System.out.println(task);
             return taskCount;
         }
+        if (isCommand(command, "delete")) {
+            return deleteTask(command, tasks, taskCount);
+        }
         if (isCommand(command, "todo")) {
             return addTask(tasks, taskCount, parseTodo(command));
         }
@@ -225,6 +228,13 @@ public class Walter {
      * Returns the task selected by a validated 1-based task number.
      */
     private static Task getTask(String command, Task[] tasks, int taskCount) throws DukeException {
+        return tasks[getTaskIndex(command, taskCount)];
+    }
+
+    /**
+     * Parses and validates a 1-based task number, returning its zero-based array index.
+     */
+    private static int getTaskIndex(String command, int taskCount) throws DukeException {
         int commandWordEnd = 0;
         while (commandWordEnd < command.length()
                 && !Character.isWhitespace(command.charAt(commandWordEnd))) {
@@ -246,7 +256,28 @@ public class Walter {
         if (taskNumber < 1 || taskNumber > taskCount) {
             throw new DukeException("Task number is out of range.");
         }
-        return tasks[taskNumber - 1];
+        return taskNumber - 1;
+    }
+
+    /**
+     * Removes one validated task and shifts later tasks to keep the list consecutive.
+     */
+    private static int deleteTask(String command, Task[] tasks, int taskCount)
+            throws DukeException {
+        int taskIndex = getTaskIndex(command, taskCount);
+        Task removedTask = tasks[taskIndex];
+        int tasksToShift = taskCount - taskIndex - 1;
+        if (tasksToShift > 0) {
+            System.arraycopy(tasks, taskIndex + 1, tasks, taskIndex, tasksToShift);
+        }
+
+        int updatedTaskCount = taskCount - 1;
+        tasks[updatedTaskCount] = null;
+        System.out.println("Walter has removed this task:");
+        System.out.println(removedTask);
+        String taskWord = updatedTaskCount == 1 ? "task" : "tasks";
+        System.out.println("Now you have " + updatedTaskCount + " " + taskWord + " in the list.");
+        return updatedTaskCount;
     }
 
     /**

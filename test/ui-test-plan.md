@@ -307,6 +307,141 @@ Expected responses omit the surrounding separator lines.
         ],
         ["Walter: Bye. Hope to see you again soon!"]
       ]
+    },
+    {
+      "id": "delete-lifecycle",
+      "aim": "Verify deletion removes the selected polymorphic task, shifts numbering, and preserves other task states.",
+      "inputs": [
+        "todo read book",
+        "deadline return book /by Sunday",
+        "event project meeting /at Mon 2-4pm",
+        "list",
+        "done 2",
+        "delete 1",
+        "list",
+        "delete 2",
+        "list",
+        "bye"
+      ],
+      "expected_outputs": [
+        [
+          "Walter has added this task:",
+          "[T][ ] read book",
+          "Now you have 1 task in the list."
+        ],
+        [
+          "Walter has added this task:",
+          "[D][ ] return book (by: Sunday)",
+          "Now you have 2 tasks in the list."
+        ],
+        [
+          "Walter has added this task:",
+          "[E][ ] project meeting (at: Mon 2-4pm)",
+          "Now you have 3 tasks in the list."
+        ],
+        [
+          "Here are the tasks in your list:",
+          "1. [T][ ] read book",
+          "2. [D][ ] return book (by: Sunday)",
+          "3. [E][ ] project meeting (at: Mon 2-4pm)"
+        ],
+        [
+          "Walter has marked this task as done:",
+          "[D][X] return book (by: Sunday)"
+        ],
+        [
+          "Walter has removed this task:",
+          "[T][ ] read book",
+          "Now you have 2 tasks in the list."
+        ],
+        [
+          "Here are the tasks in your list:",
+          "1. [D][X] return book (by: Sunday)",
+          "2. [E][ ] project meeting (at: Mon 2-4pm)"
+        ],
+        [
+          "Walter has removed this task:",
+          "[E][ ] project meeting (at: Mon 2-4pm)",
+          "Now you have 1 task in the list."
+        ],
+        [
+          "Here are the tasks in your list:",
+          "1. [D][X] return book (by: Sunday)"
+        ],
+        ["Walter: Bye. Hope to see you again soon!"]
+      ]
+    },
+    {
+      "id": "delete-errors-preserve-state",
+      "aim": "Verify malformed and out-of-range delete commands never crash or modify the task list.",
+      "inputs": [
+        "delete 1",
+        "list",
+        "todo keep me",
+        "delete",
+        "list",
+        "delete      ",
+        "list",
+        "delete abc",
+        "list",
+        "delete two",
+        "list",
+        "delete 1.5",
+        "list",
+        "delete 0",
+        "list",
+        "delete -1",
+        "list",
+        "delete 999",
+        "list",
+        "delete 1 2",
+        "list",
+        "delete 999999999999999999999999999",
+        "list",
+        "deletee 1",
+        "list",
+        "deleted 1",
+        "list",
+        "deleteSomething 1",
+        "list",
+        "bye"
+      ],
+      "expected_outputs": [
+        ["Task number is out of range."],
+        ["There are currently no items on your list."],
+        [
+          "Walter has added this task:",
+          "[T][ ] keep me",
+          "Now you have 1 task in the list."
+        ],
+        ["Task number is required."],
+        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Task number is required."],
+        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Task number must be an integer."],
+        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Task number must be an integer."],
+        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Task number must be an integer."],
+        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Task number is out of range."],
+        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Task number is out of range."],
+        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Task number is out of range."],
+        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Task number must be an integer."],
+        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Task number must be an integer."],
+        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Unknown command."],
+        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Unknown command."],
+        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Unknown command."],
+        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Walter: Bye. Hope to see you again soon!"]
+      ]
     }
   ]
 }
