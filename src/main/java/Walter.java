@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 /**
  * The entry point for the Walter chatbot.
  */
@@ -15,9 +17,22 @@ public class Walter {
         System.out.println(separator);
         System.out.print(banner);
         System.out.println("Howdy! I'm Walter!");
-        System.out.println("What are you looking for today?");
+        System.out.println("What can I do for you?");
         System.out.println(separator);
-        System.out.println("See you back here soon!");
-        System.out.println(separator);
+
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextLine()) {
+            String command = scanner.nextLine();
+            System.out.println(separator);
+
+            if (command.equals("bye")) {
+                System.out.println("     Bye. Hope to see you again soon!");
+                System.out.println(separator);
+                break;
+            }
+
+            System.out.println("Walter: " + command);
+            System.out.println(separator);
+        }
     }
 }
