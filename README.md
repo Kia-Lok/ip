@@ -15,11 +15,17 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    In the same dialog, set the **Project language level** field to the `SDK default` option.
 1. After that, locate the `src/main/java/Walter.java` file, right-click it, and choose `Run Walter.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
    ```
-    ____        _        
-   |  _ \ _   _| | _____ 
-   | | | | | | | |/ / _ \
-   | |_| | |_| |   <  __/
-   |____/ \__,_|_|\_\___|
-   ```
+██╗    ██╗ █████╗ ██╗  ████████╗███████╗██████╗
+██║    ██║██╔══██╗██║  ╚══██╔══╝██╔════╝██╔══██╗
+██║ █╗ ██║███████║██║     ██║   █████╗  ██████╔╝
+██║███╗██║██╔══██║██║     ██║   ██╔══╝  ██╔══██╗
+╚███╔███╔╝██║  ██║███████╗██║   ███████╗██║  ██║
+ ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝╚═╝   ╚══════╝╚═╝  ╚═╝
+Howdy! I'm Walter!
+What can I do for you? ```
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+
+# Acknowledgement of AI Usage
+
+There is extensive AI usage to produce the work as shown here. Codex is prompted to generate the code for each increment. Manual testing of the code is done to ensure Codex has implemented the features required in each increment properly. The text generated for each command is modified from Codex to make it fit the intended personality for the chatbot to have which is to be succinct and instructive. I did look through the code base after the increments and found no major problems.
