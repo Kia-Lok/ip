@@ -2,8 +2,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -14,6 +18,8 @@ public class Walter {
     private static final int MAX_TASKS = 100;
     private static final Path SAVE_FILE = Path.of("data", "walter.txt");
     private static final String FIELD_SEPARATOR = "\t";
+    private static final DateTimeFormatter DATE_DISPLAY_FORMATTER =
+            DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH);
 
     public static void main(String[] args) {
         String banner = """
@@ -84,6 +90,10 @@ public class Walter {
 
         if (command.equals("list")) {
             printTaskList(tasks, taskCount);
+            return taskCount;
+        }
+        if (isCommand(command, "on")) {
+            printDeadlinesOn(command, tasks, taskCount);
             return taskCount;
         }
         if (isCommand(command, "done") || isCommand(command, "mark")) {
@@ -174,6 +184,43 @@ public class Walter {
     }
 
     /**
+     * Prints Deadline tasks matching the ISO date supplied to the {@code on} command.
+     */
+    private static void printDeadlinesOn(String command, Task[] tasks, int taskCount)
+            throws DukeException {
+        String dateText = command.substring("on".length()).strip();
+        if (dateText.isEmpty()) {
+            throw new DukeException("Date is required for the on command.");
+        }
+
+        LocalDate queryDate;
+        try {
+            queryDate = LocalDate.parse(dateText);
+        } catch (DateTimeParseException exception) {
+            throw new DukeException("Date must be in yyyy-MM-dd format.");
+        }
+
+        int matchCount = 0;
+        for (int i = 0; i < taskCount; i++) {
+            if (tasks[i] instanceof Deadline deadline && deadline.getBy().equals(queryDate)) {
+                if (matchCount == 0) {
+                    System.out.println(
+                            "Here are the deadlines on "
+                                    + queryDate.format(DATE_DISPLAY_FORMATTER) + ":");
+                }
+                matchCount++;
+                System.out.println(matchCount + ". " + deadline);
+            }
+        }
+
+        if (matchCount == 0) {
+            System.out.println(
+                    "There are no deadlines on "
+                            + queryDate.format(DATE_DISPLAY_FORMATTER) + ".");
+        }
+    }
+
+    /**
      * Parses and validates a Todo command without changing task state.
      */
     private static Todo parseTodo(String command) throws DukeException {
@@ -199,14 +246,25 @@ public class Walter {
         }
 
         String description = taskDetails.substring(0, delimiterIndex).strip();
-        String by = taskDetails.substring(delimiterIndex + "/by".length()).strip();
+        String byText = taskDetails.substring(delimiterIndex + "/by".length()).strip();
         if (description.isEmpty()) {
             throw new DukeException("Deadline description cannot be empty.");
         }
-        if (by.isEmpty()) {
+        if (byText.isEmpty()) {
             throw new DukeException("Deadline date/time cannot be empty.");
         }
-        return new Deadline(description, by);
+        return new Deadline(description, parseDeadlineDate(byText));
+    }
+
+    /**
+     * Parses an ISO deadline date and converts parse failures into a user-facing error.
+     */
+    private static LocalDate parseDeadlineDate(String dateText) throws DukeException {
+        try {
+            return LocalDate.parse(dateText);
+        } catch (DateTimeParseException exception) {
+            throw new DukeException("Deadline date must be in yyyy-MM-dd format.");
+        }
     }
 
     /**
@@ -376,7 +434,9 @@ public class Walter {
         if (fields[0].equals("T") && fields.length == 3) {
             task = new Todo(requireStoredText(fields[2]));
         } else if (fields[0].equals("D") && fields.length == 4) {
-            task = new Deadline(requireStoredText(fields[2]), requireStoredText(fields[3]));
+            task = new Deadline(
+                    requireStoredText(fields[2]),
+                    parseDeadlineDate(requireStoredText(fields[3])));
         } else if (fields[0].equals("E") && fields.length == 5 && fields[2].equals("AT")) {
             task = new Event(requireStoredText(fields[3]), requireStoredText(fields[4]));
         } else if (fields[0].equals("E") && fields.length == 6
@@ -434,7 +494,7 @@ public class Walter {
         }
         if (task instanceof Deadline deadline) {
             return String.join(
-                    FIELD_SEPARATOR, "D", status, description, escapeField(deadline.getBy()));
+                    FIELD_SEPARATOR, "D", status, description, deadline.getBy().toString());
         }
         if (task instanceof Event event && event.isAtFormat()) {
             return String.join(
