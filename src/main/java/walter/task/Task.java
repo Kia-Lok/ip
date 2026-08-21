@@ -1,7 +1,7 @@
 package walter.task;
 
 /**
- * Represents a task and whether it has been completed.
+ * Represents a task description together with its completion status.
  */
 public class Task {
     private final String description;
@@ -58,6 +58,11 @@ public class Task {
         return this.isDone ? "X" : " ";
     }
 
+    /**
+     * Returns the task's status marker followed by its description.
+     *
+     * @return Display form such as {@code [X] read book}.
+     */
     @Override
     public String toString() {
         return "[" + getStatusIcon() + "] " + this.description;

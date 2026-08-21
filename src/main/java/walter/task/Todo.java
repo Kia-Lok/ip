@@ -13,6 +13,11 @@ public class Todo extends Task {
         super(description);
     }
 
+    /**
+     * Returns the Todo type marker followed by the base task display form.
+     *
+     * @return Display form such as {@code [T][ ] read book}.
+     */
     @Override
     public String toString() {
         return "[T]" + super.toString();

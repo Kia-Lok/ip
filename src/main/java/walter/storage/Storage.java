@@ -16,7 +16,9 @@ import walter.task.Task;
 import walter.task.Todo;
 
 /**
- * Loads and saves Walter tasks using the existing Level-7 line-based format.
+ * Loads and saves Walter tasks using the Level-7 line-based format.
+ * A default instance uses {@code data/walter.txt}; an alternate path can be supplied for
+ * isolated environments such as tests.
  */
 public class Storage {
     private static final Path DEFAULT_SAVE_FILE = Path.of("data", "walter.txt");
@@ -42,6 +44,10 @@ public class Storage {
 
     /**
      * Loads every persisted task, or returns an empty list when no save file exists.
+     *
+     * @return Tasks reconstructed from the save file in their stored order.
+     * @throws IOException If the save file exists but cannot be read.
+     * @throws DukeException If any stored task record is malformed or unsupported.
      */
     public List<Task> load() throws IOException, DukeException {
         if (!Files.exists(this.saveFile)) {
@@ -57,6 +63,9 @@ public class Storage {
 
     /**
      * Saves all tasks after creating the parent data directory when needed.
+     *
+     * @param tasks Tasks to persist in their current order.
+     * @throws DukeException If a task type is unsupported or the save file cannot be written.
      */
     public void save(List<Task> tasks) throws DukeException {
         List<String> lines = new ArrayList<>();
@@ -77,6 +86,10 @@ public class Storage {
 
     /**
      * Reconstructs one task while rejecting malformed or unknown records.
+     *
+     * @param line Encoded save-file record.
+     * @return Task reconstructed from the record.
+     * @throws DukeException If the record has invalid fields, status, type, or escaped text.
      */
     private Task parseStoredTask(String line) throws DukeException {
         String[] fields = line.split(FIELD_SEPARATOR, -1);
@@ -119,6 +132,10 @@ public class Storage {
 
     /**
      * Converts one task to the existing deterministic storage representation.
+     *
+     * @param task Task to encode.
+     * @return Tab-separated storage record for the task.
+     * @throws DukeException If the task has an unsupported runtime type.
      */
     private String toStoredTask(Task task) throws DukeException {
         String status = task.isDone() ? "1" : "0";
@@ -149,6 +166,10 @@ public class Storage {
 
     /**
      * Parses a stored ISO date without leaking date parsing exceptions.
+     *
+     * @param dateText Stored ISO date text.
+     * @return Parsed deadline date.
+     * @throws DukeException If the stored date is invalid.
      */
     private LocalDate parseStoredDate(String dateText) throws DukeException {
         try {
@@ -160,6 +181,10 @@ public class Storage {
 
     /**
      * Decodes one required text field and rejects empty persisted values.
+     *
+     * @param field Encoded storage field.
+     * @return Decoded non-empty text.
+     * @throws DukeException If the field is empty or contains malformed escape syntax.
      */
     private String requireStoredText(String field) throws DukeException {
         String text = unescapeField(field);
@@ -171,6 +196,9 @@ public class Storage {
 
     /**
      * Escapes control characters that would otherwise interfere with the storage format.
+     *
+     * @param field Text to encode for storage.
+     * @return Text with backslashes and supported control characters escaped.
      */
     private String escapeField(String field) {
         return field.replace("\\", "\\\\")
@@ -181,6 +209,10 @@ public class Storage {
 
     /**
      * Restores a text field escaped by {@link #escapeField(String)}.
+     *
+     * @param field Encoded storage field.
+     * @return Decoded text.
+     * @throws DukeException If an escape sequence is incomplete or unsupported.
      */
     private String unescapeField(String field) throws DukeException {
         StringBuilder result = new StringBuilder();
