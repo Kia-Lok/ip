@@ -13,6 +13,49 @@ Expected responses omit the surrounding separator lines.
   "response_timeout_seconds": 5,
   "test_cases": [
     {
+      "id": "find-task-descriptions",
+      "aim": "Verify find searches descriptions case-insensitively, preserves order, handles no matches, and rejects a missing keyword.",
+      "inputs": [
+        "todo Read Book",
+        "deadline return book /by 2026-08-30",
+        "todo buy milk",
+        "find BOOK",
+        "find milk",
+        "find 2026",
+        "find",
+        "bye"
+      ],
+      "expected_outputs": [
+        [
+          "Walter has added this task:",
+          "[T][ ] Read Book",
+          "Now you have 1 task in the list."
+        ],
+        [
+          "Walter has added this task:",
+          "[D][ ] return book (by: Aug 30 2026)",
+          "Now you have 2 tasks in the list."
+        ],
+        [
+          "Walter has added this task:",
+          "[T][ ] buy milk",
+          "Now you have 3 tasks in the list."
+        ],
+        [
+          "Here are the matching tasks in your list:",
+          "1. [T][ ] Read Book",
+          "2. [D][ ] return book (by: Aug 30 2026)"
+        ],
+        [
+          "Here are the matching tasks in your list:",
+          "1. [T][ ] buy milk"
+        ],
+        ["There are no tasks matching that keyword."],
+        ["Keyword is required for the find command."],
+        ["Walter: Bye. Hope to see you again soon!"]
+      ]
+    },
+    {
       "id": "task-status-lifecycle",
       "aim": "Verify adding Todos, listing, marking, unmarking, and exiting in one stateful session.",
       "inputs": [

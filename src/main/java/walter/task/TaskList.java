@@ -3,6 +3,7 @@ package walter.task;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import walter.DukeException;
 
@@ -126,6 +127,21 @@ public class TaskList {
         for (Task task : tasks) {
             if (task instanceof Deadline deadline && deadline.getBy().equals(date)) {
                 matches.add(deadline);
+            }
+        }
+        return matches;
+    }
+
+    /**
+     * Returns tasks whose descriptions contain the keyword, ignoring case.
+     */
+    public List<Task> find(String keyword) {
+        String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
+        List<Task> matches = new ArrayList<>();
+        for (Task task : this.tasks) {
+            String normalizedDescription = task.getDescription().toLowerCase(Locale.ROOT);
+            if (normalizedDescription.contains(normalizedKeyword)) {
+                matches.add(task);
             }
         }
         return matches;

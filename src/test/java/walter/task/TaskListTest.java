@@ -82,6 +82,35 @@ public class TaskListTest {
     }
 
     @Test
+    public void find_multipleMatches_matchesCaseInsensitivelyInOriginalOrder()
+            throws DukeException {
+        Todo firstMatch = new Todo("Read Book");
+        Todo nonMatch = new Todo("buy milk");
+        Deadline secondMatch = new Deadline("return book", LocalDate.of(2026, 8, 30));
+        Event thirdMatch = new Event("BOOK club", "3pm");
+        TaskList tasks = new TaskList(List.of(firstMatch, nonMatch, secondMatch, thirdMatch));
+
+        assertEquals(List.of(firstMatch, secondMatch, thirdMatch), tasks.find("bOoK"));
+    }
+
+    @Test
+    public void find_noMatches_emptyListReturned() throws DukeException {
+        TaskList tasks = new TaskList(List.of(new Todo("read book")));
+
+        assertTrue(tasks.find("milk").isEmpty());
+    }
+
+    @Test
+    public void find_keywordInDeadlineMetadata_onlyDescriptionMatchReturned()
+            throws DukeException {
+        Deadline metadataOnly = new Deadline("submit report", LocalDate.of(2026, 8, 30));
+        Todo descriptionMatch = new Todo("plan for 2026");
+        TaskList tasks = new TaskList(List.of(metadataOnly, descriptionMatch));
+
+        assertEquals(List.of(descriptionMatch), tasks.find("2026"));
+    }
+
+    @Test
     public void add_moreThanCapacity_exceptionThrown() throws DukeException {
         TaskList tasks = new TaskList();
         for (int i = 0; i < 100; i++) {

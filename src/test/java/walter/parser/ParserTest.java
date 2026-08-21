@@ -10,6 +10,7 @@ import walter.DukeException;
 import walter.command.AddCommand;
 import walter.command.DeleteCommand;
 import walter.command.ExitCommand;
+import walter.command.FindCommand;
 import walter.command.ListCommand;
 import walter.command.MarkCommand;
 import walter.command.OnCommand;
@@ -114,6 +115,18 @@ public class ParserTest {
     }
 
     @Test
+    public void parse_validFind_findCommandReturned() throws DukeException {
+        assertInstanceOf(FindCommand.class, Parser.parse("find book"));
+    }
+
+    @Test
+    public void parse_missingFindKeyword_exceptionThrown() {
+        assertAll(
+                () -> assertThrows(DukeException.class, () -> Parser.parse("find")),
+                () -> assertThrows(DukeException.class, () -> Parser.parse("find   ")));
+    }
+
+    @Test
     public void parse_invalidOnDate_exceptionThrown() {
         assertThrows(DukeException.class, () -> Parser.parse("on 2026-02-30"));
     }
@@ -144,6 +157,6 @@ public class ParserTest {
 
     @Test
     public void parse_unknownCommand_exceptionThrown() {
-        assertThrows(DukeException.class, () -> Parser.parse("find book"));
+        assertThrows(DukeException.class, () -> Parser.parse("archive book"));
     }
 }

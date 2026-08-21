@@ -85,6 +85,24 @@ public class CommandTest {
         assertEquals(0, storage.getSaveCount());
     }
 
+    @Test
+    public void execute_findCommand_taskStateUnchangedAndStorageNotSaved() throws DukeException {
+        Task matchingTask = new Todo("Read Book");
+        matchingTask.markAsDone();
+        Task otherTask = new Todo("buy milk");
+        TaskList tasks = new TaskList(List.of(matchingTask, otherTask));
+        List<Task> originalTasks = tasks.getTasks();
+        RecordingStorage storage = new RecordingStorage(
+                this.temporaryDirectory.resolve("walter.txt"));
+
+        new FindCommand("book").execute(tasks, new Ui(), storage);
+
+        assertEquals(originalTasks, tasks.getTasks());
+        assertTrue(matchingTask.isDone());
+        assertFalse(otherTask.isDone());
+        assertEquals(0, storage.getSaveCount());
+    }
+
     /**
      * Returns storage bound to this test's temporary directory.
      */

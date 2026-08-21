@@ -8,6 +8,7 @@ import walter.command.AddCommand;
 import walter.command.Command;
 import walter.command.DeleteCommand;
 import walter.command.ExitCommand;
+import walter.command.FindCommand;
 import walter.command.ListCommand;
 import walter.command.MarkCommand;
 import walter.command.OnCommand;
@@ -40,6 +41,9 @@ public class Parser {
         }
         if (commandWord.equals("on")) {
             return new OnCommand(parseOnDate(command));
+        }
+        if (commandWord.equals("find")) {
+            return new FindCommand(parseFindKeyword(command));
         }
         if (commandWord.equals("done") || commandWord.equals("mark")) {
             return new MarkCommand(parseTaskIndex(command));
@@ -247,6 +251,17 @@ public class Parser {
         } catch (DateTimeParseException exception) {
             throw new DukeException("Date must be in yyyy-MM-dd format.");
         }
+    }
+
+    /**
+     * Parses the keyword supplied to a {@code find} command.
+     */
+    private static String parseFindKeyword(String input) throws DukeException {
+        String keyword = argumentAfter(input, "find");
+        if (keyword.isEmpty()) {
+            throw new DukeException("Keyword is required for the find command.");
+        }
+        return keyword;
     }
 
     /**
