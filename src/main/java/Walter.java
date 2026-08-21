@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -199,14 +201,25 @@ public class Walter {
         }
 
         String description = taskDetails.substring(0, delimiterIndex).strip();
-        String by = taskDetails.substring(delimiterIndex + "/by".length()).strip();
+        String byText = taskDetails.substring(delimiterIndex + "/by".length()).strip();
         if (description.isEmpty()) {
             throw new DukeException("Deadline description cannot be empty.");
         }
-        if (by.isEmpty()) {
+        if (byText.isEmpty()) {
             throw new DukeException("Deadline date/time cannot be empty.");
         }
-        return new Deadline(description, by);
+        return new Deadline(description, parseDeadlineDate(byText));
+    }
+
+    /**
+     * Parses an ISO deadline date and converts parse failures into a user-facing error.
+     */
+    private static LocalDate parseDeadlineDate(String dateText) throws DukeException {
+        try {
+            return LocalDate.parse(dateText);
+        } catch (DateTimeParseException exception) {
+            throw new DukeException("Deadline date must be in yyyy-MM-dd format.");
+        }
     }
 
     /**
@@ -376,7 +389,9 @@ public class Walter {
         if (fields[0].equals("T") && fields.length == 3) {
             task = new Todo(requireStoredText(fields[2]));
         } else if (fields[0].equals("D") && fields.length == 4) {
-            task = new Deadline(requireStoredText(fields[2]), requireStoredText(fields[3]));
+            task = new Deadline(
+                    requireStoredText(fields[2]),
+                    parseDeadlineDate(requireStoredText(fields[3])));
         } else if (fields[0].equals("E") && fields.length == 5 && fields[2].equals("AT")) {
             task = new Event(requireStoredText(fields[3]), requireStoredText(fields[4]));
         } else if (fields[0].equals("E") && fields.length == 6
@@ -434,7 +449,7 @@ public class Walter {
         }
         if (task instanceof Deadline deadline) {
             return String.join(
-                    FIELD_SEPARATOR, "D", status, description, escapeField(deadline.getBy()));
+                    FIELD_SEPARATOR, "D", status, description, deadline.getBy().toString());
         }
         if (task instanceof Event event && event.isAtFormat()) {
             return String.join(
