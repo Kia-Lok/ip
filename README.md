@@ -13,7 +13,7 @@ Prerequisites: JDK 25 and the most recent version of IntelliJ.
    3. If there are any further prompts, accept the defaults.
 3. Configure the project to use **JDK 25** (not other versions), as explained [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).
    In the same dialog, set the **Project language level** field to the `SDK default` option.
-4. Locate the `src/main/java/Walter.java` file, right-click it, and choose `Run Walter.main()`. If the code editor shows compilation errors, try restarting the IDE.
+4. Locate the `src/main/java/walter/Walter.java` file, right-click it, and choose `Run Walter.main()`. If the code editor shows compilation errors, try restarting the IDE.
 
    If the setup is correct, you should see output similar to this:
 

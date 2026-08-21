@@ -1,3 +1,11 @@
+package walter.command;
+
+import walter.DukeException;
+import walter.storage.Storage;
+import walter.task.Task;
+import walter.task.TaskList;
+import walter.ui.Ui;
+
 /**
  * Deletes one task and persists the changed task list.
  */

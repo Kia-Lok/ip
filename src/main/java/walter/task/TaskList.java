@@ -1,6 +1,10 @@
+package walter.task;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import walter.DukeException;
 
 /**
  * Owns Walter's task collection and all operations that inspect or modify it.

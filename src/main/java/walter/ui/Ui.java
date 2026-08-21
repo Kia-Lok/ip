@@ -1,8 +1,13 @@
+package walter.ui;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
+
+import walter.task.Deadline;
+import walter.task.Task;
 
 /**
  * Handles all terminal input and output for Walter.

@@ -1,5 +1,20 @@
+package walter.parser;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+
+import walter.DukeException;
+import walter.command.AddCommand;
+import walter.command.Command;
+import walter.command.DeleteCommand;
+import walter.command.ExitCommand;
+import walter.command.ListCommand;
+import walter.command.MarkCommand;
+import walter.command.OnCommand;
+import walter.command.UnmarkCommand;
+import walter.task.Deadline;
+import walter.task.Event;
+import walter.task.Todo;
 
 /**
  * Parses and validates Walter command input without performing I/O or changing task state.
