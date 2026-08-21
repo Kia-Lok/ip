@@ -1,3 +1,5 @@
+package walter;
+
 /**
  * Represents an expected error caused by invalid user input.
  */

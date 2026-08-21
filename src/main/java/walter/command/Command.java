@@ -1,3 +1,10 @@
+package walter.command;
+
+import walter.DukeException;
+import walter.storage.Storage;
+import walter.task.TaskList;
+import walter.ui.Ui;
+
 /**
  * Represents a parsed Walter command that can be executed by the application loop.
  */

@@ -8,7 +8,7 @@ Expected responses omit the surrounding separator lines.
 ```json
 {
   "source_directory": "src/main/java",
-  "main_class": "Walter",
+  "main_class": "walter.Walter",
   "separator": "____________________________________________________________",
   "response_timeout_seconds": 5,
   "test_cases": [

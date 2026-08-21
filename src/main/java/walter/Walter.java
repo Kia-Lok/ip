@@ -1,4 +1,12 @@
+package walter;
+
 import java.io.IOException;
+
+import walter.command.Command;
+import walter.parser.Parser;
+import walter.storage.Storage;
+import walter.task.TaskList;
+import walter.ui.Ui;
 
 /**
  * Coordinates the Walter chatbot's user interface, parser, task list, and storage.

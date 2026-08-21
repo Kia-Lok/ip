@@ -1,3 +1,11 @@
+package walter.command;
+
+import walter.DukeException;
+import walter.storage.Storage;
+import walter.task.Task;
+import walter.task.TaskList;
+import walter.ui.Ui;
+
 /**
  * Marks one task as done and persists the changed state.
  */
