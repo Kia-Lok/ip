@@ -21,7 +21,7 @@ public class UnmarkCommand extends Command {
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
-        Task task = tasks.markAsNotDone(this.taskIndex);
+        Task task = tasks.markAsNotDone(taskIndex);
         ui.showUnmarkedTask(task);
         storage.save(tasks.getTasks());
     }

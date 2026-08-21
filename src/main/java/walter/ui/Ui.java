@@ -32,21 +32,21 @@ public class Ui {
      * Creates a terminal UI that reads standard input.
      */
     public Ui() {
-        this.scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
     }
 
     /**
      * Reports whether another command is available.
      */
     public boolean hasNextCommand() {
-        return this.scanner.hasNextLine();
+        return scanner.hasNextLine();
     }
 
     /**
      * Reads the next raw command line.
      */
     public String readCommand() {
-        return this.scanner.nextLine();
+        return scanner.nextLine();
     }
 
     /**

@@ -14,21 +14,21 @@ public class Task {
      */
     public Task(String description) {
         this.description = description;
-        this.isDone = false;
+        isDone = false;
     }
 
     /**
      * Marks this task as completed.
      */
     public void markAsDone() {
-        this.isDone = true;
+        isDone = true;
     }
 
     /**
      * Marks this task as not completed.
      */
     public void markAsNotDone() {
-        this.isDone = false;
+        isDone = false;
     }
 
     /**
@@ -37,7 +37,7 @@ public class Task {
      * @return Description of this task.
      */
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
     /**
@@ -46,7 +46,7 @@ public class Task {
      * @return {@code true} if this task is done.
      */
     public boolean isDone() {
-        return this.isDone;
+        return isDone;
     }
 
     /**
@@ -55,11 +55,11 @@ public class Task {
      * @return {@code X} if done, or a blank space if not done.
      */
     public String getStatusIcon() {
-        return this.isDone ? "X" : " ";
+        return isDone ? "X" : " ";
     }
 
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + this.description;
+        return "[" + getStatusIcon() + "] " + description;
     }
 }

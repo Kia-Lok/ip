@@ -77,7 +77,7 @@ public class CommandTest {
         Deadline deadline = new Deadline("submit report", date);
         TaskList tasks = new TaskList(List.of(deadline));
         RecordingStorage storage = new RecordingStorage(
-                this.temporaryDirectory.resolve("walter.txt"));
+                temporaryDirectory.resolve("walter.txt"));
 
         new OnCommand(date).execute(tasks, new Ui(), storage);
 
@@ -89,7 +89,7 @@ public class CommandTest {
      * Returns storage bound to this test's temporary directory.
      */
     private Storage createStorage() {
-        return new Storage(this.temporaryDirectory.resolve("data").resolve("walter.txt"));
+        return new Storage(temporaryDirectory.resolve("data").resolve("walter.txt"));
     }
 
     /**
@@ -104,11 +104,11 @@ public class CommandTest {
 
         @Override
         public void save(List<Task> tasks) {
-            this.saveCount++;
+            saveCount++;
         }
 
         int getSaveCount() {
-            return this.saveCount;
+            return saveCount;
         }
     }
 }

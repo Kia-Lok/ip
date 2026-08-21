@@ -44,12 +44,12 @@ public class Storage {
      * Loads every persisted task, or returns an empty list when no save file exists.
      */
     public List<Task> load() throws IOException, DukeException {
-        if (!Files.exists(this.saveFile)) {
+        if (!Files.exists(saveFile)) {
             return new ArrayList<>();
         }
 
         List<Task> tasks = new ArrayList<>();
-        for (String line : Files.readAllLines(this.saveFile, StandardCharsets.UTF_8)) {
+        for (String line : Files.readAllLines(saveFile, StandardCharsets.UTF_8)) {
             tasks.add(parseStoredTask(line));
         }
         return tasks;
@@ -65,11 +65,11 @@ public class Storage {
         }
 
         try {
-            Path parentDirectory = this.saveFile.getParent();
+            Path parentDirectory = saveFile.getParent();
             if (parentDirectory != null) {
                 Files.createDirectories(parentDirectory);
             }
-            Files.write(this.saveFile, lines, StandardCharsets.UTF_8);
+            Files.write(saveFile, lines, StandardCharsets.UTF_8);
         } catch (IOException exception) {
             throw new DukeException("Walter could not save your tasks.");
         }

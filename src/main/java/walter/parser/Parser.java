@@ -135,14 +135,14 @@ public class Parser {
         int atDelimiterIndex = findDelimiter(taskDetails, "/at", 0);
         if (atDelimiterIndex >= 0) {
             String description = taskDetails.substring(0, atDelimiterIndex).strip();
-            String at = taskDetails.substring(atDelimiterIndex + "/at".length()).strip();
+            String atTime = taskDetails.substring(atDelimiterIndex + "/at".length()).strip();
             if (description.isEmpty()) {
                 throw new DukeException("Event description cannot be empty.");
             }
-            if (at.isEmpty()) {
+            if (atTime.isEmpty()) {
                 throw new DukeException("Event date/time cannot be empty.");
             }
-            return new Event(description, at);
+            return new Event(description, atTime);
         }
 
         int fromDelimiterIndex = findDelimiter(taskDetails, "/from", 0);
@@ -159,19 +159,19 @@ public class Parser {
         }
 
         String description = taskDetails.substring(0, fromDelimiterIndex).strip();
-        String from = taskDetails.substring(
+        String startTime = taskDetails.substring(
                 fromDelimiterIndex + "/from".length(), toDelimiterIndex).strip();
-        String to = taskDetails.substring(toDelimiterIndex + "/to".length()).strip();
+        String endTime = taskDetails.substring(toDelimiterIndex + "/to".length()).strip();
         if (description.isEmpty()) {
             throw new DukeException("Event description cannot be empty.");
         }
-        if (from.isEmpty()) {
+        if (startTime.isEmpty()) {
             throw new DukeException("Event start cannot be empty.");
         }
-        if (to.isEmpty()) {
+        if (endTime.isEmpty()) {
             throw new DukeException("Event end cannot be empty.");
         }
-        return new Event(description, from, to);
+        return new Event(description, startTime, endTime);
     }
 
     /**
