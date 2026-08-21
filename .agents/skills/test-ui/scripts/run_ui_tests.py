@@ -149,7 +149,7 @@ def stop_process(process: subprocess.Popen[str]) -> None:
 
 
 def run_case(
-    repo: Path,
+    run_directory: Path,
     classes: Path,
     main_class: str,
     separator: str,
@@ -159,7 +159,7 @@ def run_case(
     """Run one test case and stop at its first mismatched command response."""
     process = subprocess.Popen(
         ["java", "-cp", str(classes), main_class],
-        cwd=repo,
+        cwd=run_directory,
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
@@ -233,9 +233,13 @@ def main(argv: list[str]) -> int:
             compile_project(repo, plan["source_directory"], classes)
 
             total_commands = 0
-            for case in plan["test_cases"]:
+            sessions = Path(temp_directory) / "sessions"
+            sessions.mkdir()
+            for index, case in enumerate(plan["test_cases"]):
+                run_directory = sessions / str(index)
+                run_directory.mkdir()
                 passed, checked = run_case(
-                    repo,
+                    run_directory,
                     classes,
                     plan["main_class"],
                     plan["separator"],

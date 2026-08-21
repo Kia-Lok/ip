@@ -1,3 +1,9 @@
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -6,6 +12,8 @@ import java.util.Scanner;
 public class Walter {
     private static final String SEPARATOR = "____________________________________________________________";
     private static final int MAX_TASKS = 100;
+    private static final Path SAVE_FILE = Path.of("data", "walter.txt");
+    private static final String FIELD_SEPARATOR = "\t";
 
     public static void main(String[] args) {
         String banner = """
@@ -16,14 +24,26 @@ public class Walter {
                 ╚███╔███╔╝██║  ██║███████╗██║   ███████╗██║  ██║
                  ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝╚═╝   ╚══════╝╚═╝  ╚═╝
                 """;
+        Task[] tasks = new Task[MAX_TASKS];
+        int taskCount = 0;
+        String loadWarning = null;
+        try {
+            taskCount = loadTasks(tasks);
+        } catch (DukeException exception) {
+            loadWarning = "Walter could not load saved tasks. Starting with an empty list.";
+        } catch (IOException exception) {
+            loadWarning = "Walter could not access saved tasks. Starting with an empty list.";
+        }
+
         System.out.println(SEPARATOR);
         System.out.print(banner);
         System.out.println("Howdy! I'm Walter!");
         System.out.println("What can I do for you?");
+        if (loadWarning != null) {
+            System.out.println(loadWarning);
+        }
         System.out.println(SEPARATOR);
 
-        Task[] tasks = new Task[MAX_TASKS];
-        int taskCount = 0;
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine().strip();
@@ -37,6 +57,9 @@ public class Walter {
 
             try {
                 taskCount = executeCommand(command, tasks, taskCount);
+                if (changesTaskState(command)) {
+                    saveTasks(tasks, taskCount);
+                }
             } catch (DukeException exception) {
                 System.out.println(exception.getMessage());
             }
@@ -101,6 +124,19 @@ public class Walter {
                 || input.startsWith(commandWord)
                 && input.length() > commandWord.length()
                 && Character.isWhitespace(input.charAt(commandWord.length()));
+    }
+
+    /**
+     * Reports whether a successfully executed command changes persisted task state.
+     */
+    private static boolean changesTaskState(String command) {
+        return isCommand(command, "todo")
+                || isCommand(command, "deadline")
+                || isCommand(command, "event")
+                || isCommand(command, "done")
+                || isCommand(command, "mark")
+                || isCommand(command, "unmark")
+                || isCommand(command, "delete");
     }
 
     /**
@@ -295,5 +331,162 @@ public class Walter {
         String taskWord = updatedTaskCount == 1 ? "task" : "tasks";
         System.out.println("Now you have " + updatedTaskCount + " " + taskWord + " in the list.");
         return updatedTaskCount;
+    }
+
+    /**
+     * Loads all tasks from disk without modifying the supplied array unless every record is valid.
+     */
+    private static int loadTasks(Task[] tasks) throws IOException, DukeException {
+        if (!Files.exists(SAVE_FILE)) {
+            return 0;
+        }
+
+        List<String> lines = Files.readAllLines(SAVE_FILE, StandardCharsets.UTF_8);
+        if (lines.size() > tasks.length) {
+            throw new DukeException("Saved task list exceeds the supported capacity.");
+        }
+
+        Task[] loadedTasks = new Task[tasks.length];
+        for (int i = 0; i < lines.size(); i++) {
+            loadedTasks[i] = parseStoredTask(lines.get(i));
+        }
+        System.arraycopy(loadedTasks, 0, tasks, 0, lines.size());
+        return lines.size();
+    }
+
+    /**
+     * Reconstructs one task from the Level-7 storage representation.
+     */
+    private static Task parseStoredTask(String line) throws DukeException {
+        String[] fields = line.split(FIELD_SEPARATOR, -1);
+        if (fields.length < 3) {
+            throw new DukeException("Malformed saved task record.");
+        }
+
+        boolean isDone;
+        if (fields[1].equals("1")) {
+            isDone = true;
+        } else if (fields[1].equals("0")) {
+            isDone = false;
+        } else {
+            throw new DukeException("Malformed saved task status.");
+        }
+
+        Task task;
+        if (fields[0].equals("T") && fields.length == 3) {
+            task = new Todo(requireStoredText(fields[2]));
+        } else if (fields[0].equals("D") && fields.length == 4) {
+            task = new Deadline(requireStoredText(fields[2]), requireStoredText(fields[3]));
+        } else if (fields[0].equals("E") && fields.length == 5 && fields[2].equals("AT")) {
+            task = new Event(requireStoredText(fields[3]), requireStoredText(fields[4]));
+        } else if (fields[0].equals("E") && fields.length == 6
+                && fields[2].equals("FROM_TO")) {
+            task = new Event(
+                    requireStoredText(fields[3]),
+                    requireStoredText(fields[4]),
+                    requireStoredText(fields[5]));
+        } else {
+            throw new DukeException("Unknown saved task record.");
+        }
+
+        if (isDone) {
+            task.markAsDone();
+        }
+        return task;
+    }
+
+    /**
+     * Decodes one required text field and rejects empty persisted values.
+     */
+    private static String requireStoredText(String field) throws DukeException {
+        String text = unescapeField(field);
+        if (text.isEmpty()) {
+            throw new DukeException("Saved task text cannot be empty.");
+        }
+        return text;
+    }
+
+    /**
+     * Writes the current task list to the relative Level-7 save file.
+     */
+    private static void saveTasks(Task[] tasks, int taskCount) throws DukeException {
+        List<String> lines = new ArrayList<>();
+        for (int i = 0; i < taskCount; i++) {
+            lines.add(toStoredTask(tasks[i]));
+        }
+
+        try {
+            Files.createDirectories(SAVE_FILE.getParent());
+            Files.write(SAVE_FILE, lines, StandardCharsets.UTF_8);
+        } catch (IOException exception) {
+            throw new DukeException("Walter could not save your tasks.");
+        }
+    }
+
+    /**
+     * Converts one task to the deterministic Level-7 storage representation.
+     */
+    private static String toStoredTask(Task task) throws DukeException {
+        String status = task.isDone() ? "1" : "0";
+        String description = escapeField(task.getDescription());
+        if (task instanceof Todo) {
+            return String.join(FIELD_SEPARATOR, "T", status, description);
+        }
+        if (task instanceof Deadline deadline) {
+            return String.join(
+                    FIELD_SEPARATOR, "D", status, description, escapeField(deadline.getBy()));
+        }
+        if (task instanceof Event event && event.isAtFormat()) {
+            return String.join(
+                    FIELD_SEPARATOR, "E", status, "AT", description, escapeField(event.getAt()));
+        }
+        if (task instanceof Event event) {
+            return String.join(
+                    FIELD_SEPARATOR,
+                    "E",
+                    status,
+                    "FROM_TO",
+                    description,
+                    escapeField(event.getFrom()),
+                    escapeField(event.getTo()));
+        }
+        throw new DukeException("Walter could not save an unknown task type.");
+    }
+
+    /**
+     * Escapes control characters that would otherwise interfere with the line-based format.
+     */
+    private static String escapeField(String field) {
+        return field.replace("\\", "\\\\")
+                .replace("\t", "\\t")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r");
+    }
+
+    /**
+     * Restores a text field escaped by {@link #escapeField(String)}.
+     */
+    private static String unescapeField(String field) throws DukeException {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < field.length(); i++) {
+            char current = field.charAt(i);
+            if (current != '\\') {
+                result.append(current);
+                continue;
+            }
+            if (i + 1 >= field.length()) {
+                throw new DukeException("Malformed saved task text.");
+            }
+
+            char escaped = field.charAt(++i);
+            switch (escaped) {
+            case '\\' -> result.append('\\');
+            case 't' -> result.append('\t');
+            case 'n' -> result.append('\n');
+            case 'r' -> result.append('\r');
+            default -> throw new DukeException("Malformed saved task text.");
+            }
+        }
+        return result.toString();
     }
 }
