@@ -17,11 +17,17 @@ import walter.task.Event;
 import walter.task.Todo;
 
 /**
- * Parses and validates Walter command input without performing I/O or changing task state.
+ * Translates raw user input into validated, executable {@link Command} objects.
+ * Parsing constructs command arguments such as tasks, indexes, and dates without performing
+ * input/output, mutating the task list, or saving data.
  */
 public class Parser {
     /**
      * Parses one input line into the corresponding executable command.
+     *
+     * @param input Raw command line entered by the user.
+     * @return Command representing the validated input.
+     * @throws DukeException If the input is blank, unknown, or has invalid command syntax.
      */
     public static Command parse(String input) throws DukeException {
         String command = normalize(input);
@@ -58,6 +64,9 @@ public class Parser {
 
     /**
      * Removes leading and trailing whitespace from one input line.
+     *
+     * @param input Input text to normalize.
+     * @return Input with leading and trailing whitespace removed.
      */
     private static String normalize(String input) {
         return input.strip();
@@ -65,6 +74,10 @@ public class Parser {
 
     /**
      * Reports whether input consists of exactly one command word.
+     *
+     * @param input Input text to compare.
+     * @param commandWord Expected command word.
+     * @return {@code true} if the normalized input equals the command word exactly.
      */
     private static boolean isExactCommand(String input, String commandWord) {
         return normalize(input).equals(commandWord);
@@ -72,6 +85,10 @@ public class Parser {
 
     /**
      * Returns the first command word after rejecting blank input.
+     *
+     * @param input Input from which to extract the command word.
+     * @return First whitespace-delimited word in the normalized input.
+     * @throws DukeException If the input is blank.
      */
     private static String getCommandWord(String input) throws DukeException {
         String command = normalize(input);
@@ -89,6 +106,10 @@ public class Parser {
 
     /**
      * Parses a Todo command.
+     *
+     * @param input Complete Todo command.
+     * @return Todo containing the parsed description.
+     * @throws DukeException If the Todo description is empty.
      */
     private static Todo parseTodo(String input) throws DukeException {
         String description = argumentAfter(input, "todo");
@@ -100,6 +121,11 @@ public class Parser {
 
     /**
      * Parses a Deadline command with an ISO date.
+     *
+     * @param input Complete Deadline command.
+     * @return Deadline containing the parsed description and date.
+     * @throws DukeException If the description or date is missing, the {@code /by} delimiter is
+     *         absent, or the date is not a valid ISO date.
      */
     private static Deadline parseDeadline(String input) throws DukeException {
         String taskDetails = argumentAfter(input, "deadline");
@@ -125,6 +151,11 @@ public class Parser {
 
     /**
      * Parses either supported Event command representation.
+     *
+     * @param input Complete Event command using either {@code /at} or {@code /from} and
+     *         {@code /to}.
+     * @return Event containing the parsed description and time details.
+     * @throws DukeException If required delimiters or event details are missing.
      */
     private static Event parseEvent(String input) throws DukeException {
         String taskDetails = argumentAfter(input, "event");
@@ -176,6 +207,10 @@ public class Parser {
 
     /**
      * Parses a one-based task number and returns its zero-based index.
+     *
+     * @param input Complete command containing a task number.
+     * @return Zero-based task index corresponding to the entered number.
+     * @throws DukeException If the task number is missing or is not an integer.
      */
     private static int parseTaskIndex(String input) throws DukeException {
         String command = normalize(input);
@@ -197,6 +232,10 @@ public class Parser {
 
     /**
      * Parses the ISO date supplied to an {@code on} command.
+     *
+     * @param input Complete {@code on} command.
+     * @return Date requested by the command.
+     * @throws DukeException If the date is missing or is not a valid ISO date.
      */
     private static LocalDate parseOnDate(String input) throws DukeException {
         String dateText = argumentAfter(input, "on");
@@ -212,6 +251,10 @@ public class Parser {
 
     /**
      * Returns the stripped text following a known command word.
+     *
+     * @param input Complete command input.
+     * @param commandWord Command word at the start of the input.
+     * @return Remaining input after removing the command word and surrounding whitespace.
      */
     private static String argumentAfter(String input, String commandWord) {
         return normalize(input).substring(commandWord.length()).strip();
@@ -219,6 +262,10 @@ public class Parser {
 
     /**
      * Parses a Deadline date and converts failures into the existing user-facing error.
+     *
+     * @param dateText Text expected to contain an ISO date.
+     * @return Parsed date.
+     * @throws DukeException If the text is not a valid ISO date.
      */
     private static LocalDate parseDeadlineDate(String dateText) throws DukeException {
         try {
@@ -230,6 +277,11 @@ public class Parser {
 
     /**
      * Finds a delimiter that appears as a complete whitespace-separated token.
+     *
+     * @param text Text to search.
+     * @param delimiter Delimiter token to locate.
+     * @param fromIndex Index at which to begin searching.
+     * @return Index of the first complete delimiter token, or {@code -1} if none exists.
      */
     private static int findDelimiter(String text, String delimiter, int fromIndex) {
         int delimiterIndex = text.indexOf(delimiter, fromIndex);

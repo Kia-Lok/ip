@@ -14,11 +14,21 @@ public class AddCommand extends Command {
 
     /**
      * Creates an add command for a Todo, Deadline, or Event.
+     *
+     * @param task Parsed task to add when the command executes.
      */
     public AddCommand(Task task) {
         this.task = task;
     }
 
+    /**
+     * Adds the parsed task, displays the updated count, and persists the task list.
+     *
+     * @param tasks Task list to which the task is added.
+     * @param ui User interface used to display the added task.
+     * @param storage Storage used to persist the updated task list.
+     * @throws DukeException If the task list is full or the updated list cannot be saved.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
         tasks.add(this.task);

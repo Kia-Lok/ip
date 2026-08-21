@@ -14,11 +14,20 @@ public class OnCommand extends Command {
 
     /**
      * Creates a date lookup command.
+     *
+     * @param date Date whose deadlines should be displayed.
      */
     public OnCommand(LocalDate date) {
         this.date = date;
     }
 
+    /**
+     * Displays deadlines occurring on the selected date without modifying or saving tasks.
+     *
+     * @param tasks Task list to search for matching deadlines.
+     * @param ui User interface used to display the matching deadlines.
+     * @param storage Storage component supplied by the application loop; it is not used.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         ui.showDeadlinesOn(this.date, tasks.getDeadlinesOn(this.date));

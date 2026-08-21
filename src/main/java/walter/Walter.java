@@ -9,7 +9,9 @@ import walter.task.TaskList;
 import walter.ui.Ui;
 
 /**
- * Coordinates the Walter chatbot's user interface, parser, task list, and storage.
+ * Coordinates Walter's user interface, command parser, task list, and persistent storage.
+ * This class owns the application lifecycle and delegates command-specific behavior to
+ * {@link Command} objects.
  */
 public class Walter {
     private final Ui ui;
@@ -56,6 +58,8 @@ public class Walter {
 
     /**
      * Starts Walter.
+     *
+     * @param args Command-line arguments; Walter does not currently use them.
      */
     public static void main(String[] args) {
         new Walter().run();

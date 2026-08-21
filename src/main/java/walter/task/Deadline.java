@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 /**
- * Represents a task that needs to be completed by a specified time.
+ * Represents a task that must be completed by a specific calendar date.
  */
 public class Deadline extends Task {
     private static final DateTimeFormatter DISPLAY_FORMATTER =
@@ -33,6 +33,11 @@ public class Deadline extends Task {
         return this.by;
     }
 
+    /**
+     * Returns the Deadline type marker, task status, description, and friendly due date.
+     *
+     * @return Display form such as {@code [D][ ] submit report (by: Aug 30 2026)}.
+     */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + this.by.format(DISPLAY_FORMATTER) + ")";

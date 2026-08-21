@@ -10,7 +10,7 @@ import walter.task.Deadline;
 import walter.task.Task;
 
 /**
- * Handles all terminal input and output for Walter.
+ * Handles Walter's terminal input and presents all user-facing output.
  */
 public class Ui {
     private static final String SEPARATOR =
@@ -37,6 +37,8 @@ public class Ui {
 
     /**
      * Reports whether another command is available.
+     *
+     * @return {@code true} if standard input contains another line.
      */
     public boolean hasNextCommand() {
         return this.scanner.hasNextLine();
@@ -44,6 +46,8 @@ public class Ui {
 
     /**
      * Reads the next raw command line.
+     *
+     * @return Next line from standard input without parsing or normalization.
      */
     public String readCommand() {
         return this.scanner.nextLine();
@@ -51,6 +55,8 @@ public class Ui {
 
     /**
      * Displays Walter's banner, greeting, and an optional loading warning.
+     *
+     * @param loadWarning Warning to display after the greeting, or {@code null} for none.
      */
     public void showWelcome(String loadWarning) {
         showSeparator();
@@ -80,6 +86,8 @@ public class Ui {
 
     /**
      * Displays an expected user-facing error.
+     *
+     * @param message Error message to display.
      */
     public void showError(String message) {
         System.out.println(message);
@@ -87,6 +95,8 @@ public class Ui {
 
     /**
      * Displays all tasks in their current order.
+     *
+     * @param tasks Tasks to display in numbered order.
      */
     public void showTaskList(List<Task> tasks) {
         if (tasks.isEmpty()) {
@@ -102,6 +112,9 @@ public class Ui {
 
     /**
      * Displays Deadline tasks matching a date, or the existing no-match message.
+     *
+     * @param date Date used in the heading or no-match message.
+     * @param deadlines Matching deadlines in display order.
      */
     public void showDeadlinesOn(LocalDate date, List<Deadline> deadlines) {
         String displayDate = date.format(DATE_DISPLAY_FORMATTER);
@@ -118,6 +131,9 @@ public class Ui {
 
     /**
      * Displays confirmation that a task was added.
+     *
+     * @param task Task that was added.
+     * @param taskCount Number of tasks after the addition.
      */
     public void showAddedTask(Task task, int taskCount) {
         System.out.println("Walter has added this task:");
@@ -127,6 +143,9 @@ public class Ui {
 
     /**
      * Displays confirmation that a task was deleted.
+     *
+     * @param task Task that was deleted.
+     * @param taskCount Number of tasks after the deletion.
      */
     public void showDeletedTask(Task task, int taskCount) {
         System.out.println("Walter has removed this task:");
@@ -136,6 +155,8 @@ public class Ui {
 
     /**
      * Displays confirmation that a task was marked done.
+     *
+     * @param task Task whose status was changed.
      */
     public void showMarkedTask(Task task) {
         System.out.println("Walter has marked this task as done:");
@@ -144,6 +165,8 @@ public class Ui {
 
     /**
      * Displays confirmation that a task was marked not done.
+     *
+     * @param task Task whose status was changed.
      */
     public void showUnmarkedTask(Task task) {
         System.out.println("Walter has marked this task as not done yet:");
@@ -152,6 +175,8 @@ public class Ui {
 
     /**
      * Displays the current task count with the correct singular or plural noun.
+     *
+     * @param taskCount Number of tasks to display.
      */
     private void showTaskCount(int taskCount) {
         String taskWord = taskCount == 1 ? "task" : "tasks";

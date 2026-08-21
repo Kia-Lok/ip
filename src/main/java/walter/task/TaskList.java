@@ -7,7 +7,7 @@ import java.util.List;
 import walter.DukeException;
 
 /**
- * Owns Walter's task collection and all operations that inspect or modify it.
+ * Owns Walter's ordered task collection and enforces its capacity and index rules.
  */
 public class TaskList {
     private static final int MAX_TASKS = 100;
@@ -23,6 +23,9 @@ public class TaskList {
 
     /**
      * Creates a task list from tasks loaded by storage.
+     *
+     * @param tasks Initial tasks in display order.
+     * @throws DukeException If the supplied list exceeds Walter's supported capacity.
      */
     public TaskList(List<Task> tasks) throws DukeException {
         if (tasks.size() > MAX_TASKS) {
@@ -33,6 +36,9 @@ public class TaskList {
 
     /**
      * Adds one task while enforcing Walter's existing capacity.
+     *
+     * @param task Task to append to the list.
+     * @throws DukeException If the task list has reached its supported capacity.
      */
     public void add(Task task) throws DukeException {
         if (this.tasks.size() >= MAX_TASKS) {
@@ -43,6 +49,10 @@ public class TaskList {
 
     /**
      * Deletes and returns the task at a validated zero-based index.
+     *
+     * @param taskIndex Zero-based index of the task to delete.
+     * @return Deleted task.
+     * @throws DukeException If the index does not identify an existing task.
      */
     public Task delete(int taskIndex) throws DukeException {
         validateIndex(taskIndex);
@@ -51,6 +61,10 @@ public class TaskList {
 
     /**
      * Marks and returns the task at a validated zero-based index.
+     *
+     * @param taskIndex Zero-based index of the task to mark as done.
+     * @return Task whose status was changed.
+     * @throws DukeException If the index does not identify an existing task.
      */
     public Task markAsDone(int taskIndex) throws DukeException {
         Task task = get(taskIndex);
@@ -60,6 +74,10 @@ public class TaskList {
 
     /**
      * Unmarks and returns the task at a validated zero-based index.
+     *
+     * @param taskIndex Zero-based index of the task to mark as not done.
+     * @return Task whose status was changed.
+     * @throws DukeException If the index does not identify an existing task.
      */
     public Task markAsNotDone(int taskIndex) throws DukeException {
         Task task = get(taskIndex);
@@ -69,6 +87,10 @@ public class TaskList {
 
     /**
      * Returns the task at a validated zero-based index.
+     *
+     * @param taskIndex Zero-based index of the task to retrieve.
+     * @return Task at the requested index.
+     * @throws DukeException If the index does not identify an existing task.
      */
     public Task get(int taskIndex) throws DukeException {
         validateIndex(taskIndex);
@@ -77,6 +99,8 @@ public class TaskList {
 
     /**
      * Returns the number of stored tasks.
+     *
+     * @return Current task count.
      */
     public int size() {
         return this.tasks.size();
@@ -84,6 +108,8 @@ public class TaskList {
 
     /**
      * Returns a read-only snapshot for display or persistence.
+     *
+     * @return Unmodifiable snapshot preserving the current task order.
      */
     public List<Task> getTasks() {
         return List.copyOf(this.tasks);
@@ -91,6 +117,9 @@ public class TaskList {
 
     /**
      * Returns matching Deadlines in their original task-list order.
+     *
+     * @param date Date for which deadlines are requested.
+     * @return Deadlines due on the given date, preserving task-list order.
      */
     public List<Deadline> getDeadlinesOn(LocalDate date) {
         List<Deadline> matches = new ArrayList<>();
@@ -104,6 +133,9 @@ public class TaskList {
 
     /**
      * Rejects an index that does not identify an existing task.
+     *
+     * @param taskIndex Zero-based index to validate.
+     * @throws DukeException If the index is negative or beyond the end of the task list.
      */
     private void validateIndex(int taskIndex) throws DukeException {
         if (taskIndex < 0 || taskIndex >= this.tasks.size()) {

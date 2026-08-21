@@ -1,7 +1,7 @@
 package walter.task;
 
 /**
- * Represents a task that occurs at a specified time or period.
+ * Represents a task that occurs at one specified time or across a start/end period.
  */
 public class Event extends Task {
     private final String at;
@@ -71,6 +71,11 @@ public class Event extends Task {
         return this.to;
     }
 
+    /**
+     * Returns the Event type marker, task status, description, and configured time details.
+     *
+     * @return Display form using either {@code at:} or {@code from: ... to: ...}.
+     */
     @Override
     public String toString() {
         String timeDetails = isAtFormat()
