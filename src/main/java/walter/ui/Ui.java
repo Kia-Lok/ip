@@ -32,7 +32,7 @@ public class Ui {
      * Creates a terminal UI that reads standard input.
      */
     public Ui() {
-        this.scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
     }
 
     /**
@@ -41,7 +41,7 @@ public class Ui {
      * @return {@code true} if standard input contains another line.
      */
     public boolean hasNextCommand() {
-        return this.scanner.hasNextLine();
+        return scanner.hasNextLine();
     }
 
     /**
@@ -50,7 +50,7 @@ public class Ui {
      * @return Next line from standard input without parsing or normalization.
      */
     public String readCommand() {
-        return this.scanner.nextLine();
+        return scanner.nextLine();
     }
 
     /**

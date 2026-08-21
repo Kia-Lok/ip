@@ -18,7 +18,7 @@ public class TaskList {
      * Creates an empty task list.
      */
     public TaskList() {
-        this.tasks = new ArrayList<>();
+        tasks = new ArrayList<>();
     }
 
     /**
@@ -41,10 +41,10 @@ public class TaskList {
      * @throws DukeException If the task list has reached its supported capacity.
      */
     public void add(Task task) throws DukeException {
-        if (this.tasks.size() >= MAX_TASKS) {
+        if (tasks.size() >= MAX_TASKS) {
             throw new DukeException("Task list is full.");
         }
-        this.tasks.add(task);
+        tasks.add(task);
     }
 
     /**
@@ -56,7 +56,7 @@ public class TaskList {
      */
     public Task delete(int taskIndex) throws DukeException {
         validateIndex(taskIndex);
-        return this.tasks.remove(taskIndex);
+        return tasks.remove(taskIndex);
     }
 
     /**
@@ -94,7 +94,7 @@ public class TaskList {
      */
     public Task get(int taskIndex) throws DukeException {
         validateIndex(taskIndex);
-        return this.tasks.get(taskIndex);
+        return tasks.get(taskIndex);
     }
 
     /**
@@ -103,7 +103,7 @@ public class TaskList {
      * @return Current task count.
      */
     public int size() {
-        return this.tasks.size();
+        return tasks.size();
     }
 
     /**
@@ -112,7 +112,7 @@ public class TaskList {
      * @return Unmodifiable snapshot preserving the current task order.
      */
     public List<Task> getTasks() {
-        return List.copyOf(this.tasks);
+        return List.copyOf(tasks);
     }
 
     /**
@@ -123,7 +123,7 @@ public class TaskList {
      */
     public List<Deadline> getDeadlinesOn(LocalDate date) {
         List<Deadline> matches = new ArrayList<>();
-        for (Task task : this.tasks) {
+        for (Task task : tasks) {
             if (task instanceof Deadline deadline && deadline.getBy().equals(date)) {
                 matches.add(deadline);
             }
@@ -138,7 +138,7 @@ public class TaskList {
      * @throws DukeException If the index is negative or beyond the end of the task list.
      */
     private void validateIndex(int taskIndex) throws DukeException {
-        if (taskIndex < 0 || taskIndex >= this.tasks.size()) {
+        if (taskIndex < 0 || taskIndex >= tasks.size()) {
             throw new DukeException("Task number is out of range.");
         }
     }

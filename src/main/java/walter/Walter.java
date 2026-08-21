@@ -23,16 +23,16 @@ public class Walter {
      * Creates Walter and loads any tasks saved by an earlier run.
      */
     public Walter() {
-        this.ui = new Ui();
-        this.storage = new Storage();
+        ui = new Ui();
+        storage = new Storage();
         try {
-            this.tasks = new TaskList(this.storage.load());
+            tasks = new TaskList(storage.load());
         } catch (DukeException exception) {
-            this.tasks = new TaskList();
-            this.loadWarning = "Walter could not load saved tasks. Starting with an empty list.";
+            tasks = new TaskList();
+            loadWarning = "Walter could not load saved tasks. Starting with an empty list.";
         } catch (IOException exception) {
-            this.tasks = new TaskList();
-            this.loadWarning = "Walter could not access saved tasks. Starting with an empty list.";
+            tasks = new TaskList();
+            loadWarning = "Walter could not access saved tasks. Starting with an empty list.";
         }
     }
 
@@ -40,19 +40,19 @@ public class Walter {
      * Runs the command loop until the user exits or input ends.
      */
     public void run() {
-        this.ui.showWelcome(this.loadWarning);
-        while (this.ui.hasNextCommand()) {
-            this.ui.showSeparator();
+        ui.showWelcome(loadWarning);
+        while (ui.hasNextCommand()) {
+            ui.showSeparator();
             try {
-                Command command = Parser.parse(this.ui.readCommand());
-                command.execute(this.tasks, this.ui, this.storage);
+                Command command = Parser.parse(ui.readCommand());
+                command.execute(tasks, ui, storage);
                 if (command.isExit()) {
                     break;
                 }
             } catch (DukeException exception) {
-                this.ui.showError(exception.getMessage());
+                ui.showError(exception.getMessage());
             }
-            this.ui.showSeparator();
+            ui.showSeparator();
         }
     }
 

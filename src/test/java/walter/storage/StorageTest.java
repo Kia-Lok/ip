@@ -164,14 +164,14 @@ public class StorageTest {
      * Returns storage bound to this test's temporary directory.
      */
     private Storage createStorage() {
-        return new Storage(this.temporaryDirectory.resolve("data").resolve("walter.txt"));
+        return new Storage(temporaryDirectory.resolve("data").resolve("walter.txt"));
     }
 
     /**
      * Writes one raw record for malformed-file tests.
      */
     private void writeSaveFile(String record) throws IOException {
-        Path saveFile = this.temporaryDirectory.resolve("data").resolve("walter.txt");
+        Path saveFile = temporaryDirectory.resolve("data").resolve("walter.txt");
         Files.createDirectories(saveFile.getParent());
         Files.writeString(saveFile, record, StandardCharsets.UTF_8);
     }

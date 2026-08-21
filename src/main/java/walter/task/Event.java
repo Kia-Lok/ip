@@ -4,35 +4,35 @@ package walter.task;
  * Represents a task that occurs at one specified time or across a start/end period.
  */
 public class Event extends Task {
-    private final String at;
-    private final String from;
-    private final String to;
+    private final String atTime;
+    private final String startTime;
+    private final String endTime;
 
     /**
      * Creates an event task with the given description and time text.
      *
      * @param description Description of the event task.
-     * @param at Text describing when the event occurs.
+     * @param atTime Text describing when the event occurs.
      */
-    public Event(String description, String at) {
+    public Event(String description, String atTime) {
         super(description);
-        this.at = at;
-        this.from = null;
-        this.to = null;
+        this.atTime = atTime;
+        startTime = null;
+        endTime = null;
     }
 
     /**
      * Creates an event task that starts and ends at the given times.
      *
      * @param description Description of the event task.
-     * @param from Text describing when the event starts.
-     * @param to Text describing when the event ends.
+     * @param startTime Text describing when the event starts.
+     * @param endTime Text describing when the event ends.
      */
-    public Event(String description, String from, String to) {
+    public Event(String description, String startTime, String endTime) {
         super(description);
-        this.at = null;
-        this.from = from;
-        this.to = to;
+        atTime = null;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     /**
@@ -41,7 +41,7 @@ public class Event extends Task {
      * @return {@code true} for an at-time event, or {@code false} for a time range.
      */
     public boolean isAtFormat() {
-        return this.at != null;
+        return atTime != null;
     }
 
     /**
@@ -50,7 +50,7 @@ public class Event extends Task {
      * @return At-time text, or {@code null} for a time-range event.
      */
     public String getAt() {
-        return this.at;
+        return atTime;
     }
 
     /**
@@ -59,7 +59,7 @@ public class Event extends Task {
      * @return Start text, or {@code null} for an at-time event.
      */
     public String getFrom() {
-        return this.from;
+        return startTime;
     }
 
     /**
@@ -68,7 +68,7 @@ public class Event extends Task {
      * @return End text, or {@code null} for an at-time event.
      */
     public String getTo() {
-        return this.to;
+        return endTime;
     }
 
     /**
@@ -79,8 +79,8 @@ public class Event extends Task {
     @Override
     public String toString() {
         String timeDetails = isAtFormat()
-                ? "at: " + this.at
-                : "from: " + this.from + " to: " + this.to;
+                ? "at: " + atTime
+                : "from: " + startTime + " to: " + endTime;
         return "[E]" + super.toString() + " (" + timeDetails + ")";
     }
 }

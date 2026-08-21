@@ -30,6 +30,6 @@ public class OnCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
-        ui.showDeadlinesOn(this.date, tasks.getDeadlinesOn(this.date));
+        ui.showDeadlinesOn(date, tasks.getDeadlinesOn(date));
     }
 }
