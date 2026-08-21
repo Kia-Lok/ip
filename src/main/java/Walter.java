@@ -3,9 +3,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -16,6 +18,8 @@ public class Walter {
     private static final int MAX_TASKS = 100;
     private static final Path SAVE_FILE = Path.of("data", "walter.txt");
     private static final String FIELD_SEPARATOR = "\t";
+    private static final DateTimeFormatter DATE_DISPLAY_FORMATTER =
+            DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH);
 
     public static void main(String[] args) {
         String banner = """
@@ -86,6 +90,10 @@ public class Walter {
 
         if (command.equals("list")) {
             printTaskList(tasks, taskCount);
+            return taskCount;
+        }
+        if (isCommand(command, "on")) {
+            printDeadlinesOn(command, tasks, taskCount);
             return taskCount;
         }
         if (isCommand(command, "done") || isCommand(command, "mark")) {
@@ -172,6 +180,43 @@ public class Walter {
         System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < taskCount; i++) {
             System.out.println((i + 1) + ". " + tasks[i]);
+        }
+    }
+
+    /**
+     * Prints Deadline tasks matching the ISO date supplied to the {@code on} command.
+     */
+    private static void printDeadlinesOn(String command, Task[] tasks, int taskCount)
+            throws DukeException {
+        String dateText = command.substring("on".length()).strip();
+        if (dateText.isEmpty()) {
+            throw new DukeException("Date is required for the on command.");
+        }
+
+        LocalDate queryDate;
+        try {
+            queryDate = LocalDate.parse(dateText);
+        } catch (DateTimeParseException exception) {
+            throw new DukeException("Date must be in yyyy-MM-dd format.");
+        }
+
+        int matchCount = 0;
+        for (int i = 0; i < taskCount; i++) {
+            if (tasks[i] instanceof Deadline deadline && deadline.getBy().equals(queryDate)) {
+                if (matchCount == 0) {
+                    System.out.println(
+                            "Here are the deadlines on "
+                                    + queryDate.format(DATE_DISPLAY_FORMATTER) + ":");
+                }
+                matchCount++;
+                System.out.println(matchCount + ". " + deadline);
+            }
+        }
+
+        if (matchCount == 0) {
+            System.out.println(
+                    "There are no deadlines on "
+                            + queryDate.format(DATE_DISPLAY_FORMATTER) + ".");
         }
     }
 
