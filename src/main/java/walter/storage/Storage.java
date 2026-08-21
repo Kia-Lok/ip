@@ -19,19 +19,37 @@ import walter.task.Todo;
  * Loads and saves Walter tasks using the existing Level-7 line-based format.
  */
 public class Storage {
-    private static final Path SAVE_FILE = Path.of("data", "walter.txt");
+    private static final Path DEFAULT_SAVE_FILE = Path.of("data", "walter.txt");
     private static final String FIELD_SEPARATOR = "\t";
+
+    private final Path saveFile;
+
+    /**
+     * Creates storage using Walter's production save-file location.
+     */
+    public Storage() {
+        this(DEFAULT_SAVE_FILE);
+    }
+
+    /**
+     * Creates storage using a specified save-file location.
+     *
+     * @param saveFile Location used to load and save tasks.
+     */
+    public Storage(Path saveFile) {
+        this.saveFile = saveFile;
+    }
 
     /**
      * Loads every persisted task, or returns an empty list when no save file exists.
      */
     public List<Task> load() throws IOException, DukeException {
-        if (!Files.exists(SAVE_FILE)) {
+        if (!Files.exists(this.saveFile)) {
             return new ArrayList<>();
         }
 
         List<Task> tasks = new ArrayList<>();
-        for (String line : Files.readAllLines(SAVE_FILE, StandardCharsets.UTF_8)) {
+        for (String line : Files.readAllLines(this.saveFile, StandardCharsets.UTF_8)) {
             tasks.add(parseStoredTask(line));
         }
         return tasks;
@@ -47,8 +65,11 @@ public class Storage {
         }
 
         try {
-            Files.createDirectories(SAVE_FILE.getParent());
-            Files.write(SAVE_FILE, lines, StandardCharsets.UTF_8);
+            Path parentDirectory = this.saveFile.getParent();
+            if (parentDirectory != null) {
+                Files.createDirectories(parentDirectory);
+            }
+            Files.write(this.saveFile, lines, StandardCharsets.UTF_8);
         } catch (IOException exception) {
             throw new DukeException("Walter could not save your tasks.");
         }
