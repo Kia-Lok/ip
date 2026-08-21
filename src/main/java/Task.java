@@ -30,6 +30,24 @@ public class Task {
     }
 
     /**
+     * Returns the task description for persistence.
+     *
+     * @return Description of this task.
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Reports whether this task has been completed.
+     *
+     * @return {@code true} if this task is done.
+     */
+    public boolean isDone() {
+        return this.isDone;
+    }
+
+    /**
      * Returns the icon representing this task's completion status.
      *
      * @return {@code X} if done, or a blank space if not done.

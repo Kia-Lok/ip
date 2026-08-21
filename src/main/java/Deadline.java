@@ -15,6 +15,15 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    /**
+     * Returns the deadline text for persistence.
+     *
+     * @return Text describing when this task is due.
+     */
+    public String getBy() {
+        return this.by;
+    }
+
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + this.by + ")";
