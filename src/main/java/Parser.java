@@ -6,23 +6,59 @@ import java.time.format.DateTimeParseException;
  */
 public class Parser {
     /**
+     * Parses one input line into the corresponding executable command.
+     */
+    public static Command parse(String input) throws DukeException {
+        String command = normalize(input);
+        String commandWord = getCommandWord(command);
+        if (commandWord.equals("list") && isExactCommand(command, "list")) {
+            return new ListCommand();
+        }
+        if (commandWord.equals("bye") && isExactCommand(command, "bye")) {
+            return new ExitCommand();
+        }
+        if (commandWord.equals("on")) {
+            return new OnCommand(parseOnDate(command));
+        }
+        if (commandWord.equals("done") || commandWord.equals("mark")) {
+            return new MarkCommand(parseTaskIndex(command));
+        }
+        if (commandWord.equals("unmark")) {
+            return new UnmarkCommand(parseTaskIndex(command));
+        }
+        if (commandWord.equals("delete")) {
+            return new DeleteCommand(parseTaskIndex(command));
+        }
+        if (commandWord.equals("todo")) {
+            return new AddCommand(parseTodo(command));
+        }
+        if (commandWord.equals("deadline")) {
+            return new AddCommand(parseDeadline(command));
+        }
+        if (commandWord.equals("event")) {
+            return new AddCommand(parseEvent(command));
+        }
+        throw new DukeException("Unknown command.");
+    }
+
+    /**
      * Removes leading and trailing whitespace from one input line.
      */
-    public static String normalize(String input) {
+    private static String normalize(String input) {
         return input.strip();
     }
 
     /**
      * Reports whether input consists of exactly one command word.
      */
-    public static boolean isExactCommand(String input, String commandWord) {
+    private static boolean isExactCommand(String input, String commandWord) {
         return normalize(input).equals(commandWord);
     }
 
     /**
      * Returns the first command word after rejecting blank input.
      */
-    public static String getCommandWord(String input) throws DukeException {
+    private static String getCommandWord(String input) throws DukeException {
         String command = normalize(input);
         if (command.isBlank()) {
             throw new DukeException("Command cannot be blank.");
@@ -39,7 +75,7 @@ public class Parser {
     /**
      * Parses a Todo command.
      */
-    public static Todo parseTodo(String input) throws DukeException {
+    private static Todo parseTodo(String input) throws DukeException {
         String description = argumentAfter(input, "todo");
         if (description.isEmpty()) {
             throw new DukeException("Todo description cannot be empty.");
@@ -50,7 +86,7 @@ public class Parser {
     /**
      * Parses a Deadline command with an ISO date.
      */
-    public static Deadline parseDeadline(String input) throws DukeException {
+    private static Deadline parseDeadline(String input) throws DukeException {
         String taskDetails = argumentAfter(input, "deadline");
         if (taskDetails.isEmpty()) {
             throw new DukeException("Deadline description cannot be empty.");
@@ -75,7 +111,7 @@ public class Parser {
     /**
      * Parses either supported Event command representation.
      */
-    public static Event parseEvent(String input) throws DukeException {
+    private static Event parseEvent(String input) throws DukeException {
         String taskDetails = argumentAfter(input, "event");
         if (taskDetails.isEmpty()) {
             throw new DukeException("Event description cannot be empty.");
@@ -126,7 +162,7 @@ public class Parser {
     /**
      * Parses a one-based task number and returns its zero-based index.
      */
-    public static int parseTaskIndex(String input) throws DukeException {
+    private static int parseTaskIndex(String input) throws DukeException {
         String command = normalize(input);
         int commandWordEnd = getCommandWord(command).length();
         if (commandWordEnd == command.length()
@@ -147,7 +183,7 @@ public class Parser {
     /**
      * Parses the ISO date supplied to an {@code on} command.
      */
-    public static LocalDate parseOnDate(String input) throws DukeException {
+    private static LocalDate parseOnDate(String input) throws DukeException {
         String dateText = argumentAfter(input, "on");
         if (dateText.isEmpty()) {
             throw new DukeException("Date is required for the on command.");
