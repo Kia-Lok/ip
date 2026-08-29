@@ -1,5 +1,6 @@
 package walter.ui;
 
+import java.io.PrintStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -27,12 +28,27 @@ public class Ui {
             """;
 
     private final Scanner scanner;
+    private final PrintStream output;
+    private final boolean isTerminal;
 
     /**
      * Creates a terminal UI that reads standard input.
      */
     public Ui() {
         scanner = new Scanner(System.in);
+        output = System.out;
+        isTerminal = true;
+    }
+
+    /**
+     * Creates an output-only UI for presenting one command response.
+     *
+     * @param output Destination for user-facing output.
+     */
+    public Ui(PrintStream output) {
+        scanner = null;
+        this.output = output;
+        isTerminal = false;
     }
 
     /**
@@ -41,7 +57,7 @@ public class Ui {
      * @return {@code true} if standard input contains another line.
      */
     public boolean hasNextCommand() {
-        return scanner.hasNextLine();
+        return scanner != null && scanner.hasNextLine();
     }
 
     /**
@@ -50,6 +66,9 @@ public class Ui {
      * @return Next line from standard input without parsing or normalization.
      */
     public String readCommand() {
+        if (scanner == null) {
+            throw new IllegalStateException("This UI does not read commands.");
+        }
         return scanner.nextLine();
     }
 
@@ -60,11 +79,11 @@ public class Ui {
      */
     public void showWelcome(String loadWarning) {
         showSeparator();
-        System.out.print(BANNER);
-        System.out.println("Howdy! I'm Walter!");
-        System.out.println("What can I do for you?");
+        output.print(BANNER);
+        output.println("Howdy! I'm Walter!");
+        output.println("What can I do for you?");
         if (loadWarning != null) {
-            System.out.println(loadWarning);
+            output.println(loadWarning);
         }
         showSeparator();
     }
@@ -73,15 +92,17 @@ public class Ui {
      * Displays one output separator.
      */
     public void showSeparator() {
-        System.out.println(SEPARATOR);
+        output.println(SEPARATOR);
     }
 
     /**
      * Displays Walter's exit message and closing separator.
      */
     public void showGoodbye() {
-        System.out.println("Walter: Bye. Hope to see you again soon!");
-        showSeparator();
+        output.println("Walter: Bye. Hope to see you again soon!");
+        if (isTerminal) {
+            showSeparator();
+        }
     }
 
     /**
@@ -90,7 +111,7 @@ public class Ui {
      * @param message Error message to display.
      */
     public void showError(String message) {
-        System.out.println(message);
+        output.println(message);
     }
 
     /**
@@ -100,13 +121,13 @@ public class Ui {
      */
     public void showTaskList(List<Task> tasks) {
         if (tasks.isEmpty()) {
-            System.out.println("There are currently no items on your list.");
+            output.println("There are currently no items on your list.");
             return;
         }
 
-        System.out.println("Here are the tasks in your list:");
+        output.println("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + ". " + tasks.get(i));
+            output.println((i + 1) + ". " + tasks.get(i));
         }
     }
 
@@ -119,13 +140,13 @@ public class Ui {
     public void showDeadlinesOn(LocalDate date, List<Deadline> deadlines) {
         String displayDate = date.format(DATE_DISPLAY_FORMATTER);
         if (deadlines.isEmpty()) {
-            System.out.println("There are no deadlines on " + displayDate + ".");
+            output.println("There are no deadlines on " + displayDate + ".");
             return;
         }
 
-        System.out.println("Here are the deadlines on " + displayDate + ":");
+        output.println("Here are the deadlines on " + displayDate + ":");
         for (int i = 0; i < deadlines.size(); i++) {
-            System.out.println((i + 1) + ". " + deadlines.get(i));
+            output.println((i + 1) + ". " + deadlines.get(i));
         }
     }
 
@@ -134,13 +155,13 @@ public class Ui {
      */
     public void showFindResults(List<Task> matches) {
         if (matches.isEmpty()) {
-            System.out.println("There are no tasks matching that keyword.");
+            output.println("There are no tasks matching that keyword.");
             return;
         }
 
-        System.out.println("Here are the matching tasks in your list:");
+        output.println("Here are the matching tasks in your list:");
         for (int i = 0; i < matches.size(); i++) {
-            System.out.println((i + 1) + ". " + matches.get(i));
+            output.println((i + 1) + ". " + matches.get(i));
         }
     }
 
@@ -151,8 +172,8 @@ public class Ui {
      * @param taskCount Number of tasks after the addition.
      */
     public void showAddedTask(Task task, int taskCount) {
-        System.out.println("Walter has added this task:");
-        System.out.println(task);
+        output.println("Walter has added this task:");
+        output.println(task);
         showTaskCount(taskCount);
     }
 
@@ -163,8 +184,8 @@ public class Ui {
      * @param taskCount Number of tasks after the deletion.
      */
     public void showDeletedTask(Task task, int taskCount) {
-        System.out.println("Walter has removed this task:");
-        System.out.println(task);
+        output.println("Walter has removed this task:");
+        output.println(task);
         showTaskCount(taskCount);
     }
 
@@ -174,8 +195,8 @@ public class Ui {
      * @param task Task whose status was changed.
      */
     public void showMarkedTask(Task task) {
-        System.out.println("Walter has marked this task as done:");
-        System.out.println(task);
+        output.println("Walter has marked this task as done:");
+        output.println(task);
     }
 
     /**
@@ -184,8 +205,8 @@ public class Ui {
      * @param task Task whose status was changed.
      */
     public void showUnmarkedTask(Task task) {
-        System.out.println("Walter has marked this task as not done yet:");
-        System.out.println(task);
+        output.println("Walter has marked this task as not done yet:");
+        output.println(task);
     }
 
     /**
@@ -195,6 +216,6 @@ public class Ui {
      */
     private void showTaskCount(int taskCount) {
         String taskWord = taskCount == 1 ? "task" : "tasks";
-        System.out.println("Now you have " + taskCount + " " + taskWord + " in the list.");
+        output.println("Now you have " + taskCount + " " + taskWord + " in the list.");
     }
 }

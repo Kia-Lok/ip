@@ -1,8 +1,12 @@
 package walter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 import walter.command.Command;
+import walter.command.CommandCategory;
 import walter.parser.Parser;
 import walter.storage.Storage;
 import walter.task.TaskList;
@@ -18,6 +22,7 @@ public class Walter {
     private final Storage storage;
     private TaskList tasks;
     private String loadWarning;
+    private CommandCategory lastCommandCategory = CommandCategory.NORMAL;
 
     /**
      * Creates Walter and loads any tasks saved by an earlier run.
@@ -25,6 +30,24 @@ public class Walter {
     public Walter() {
         ui = new Ui();
         storage = new Storage();
+        loadTasks();
+    }
+
+    /**
+     * Creates Walter with a specified storage component for isolated environments.
+     *
+     * @param storage Storage used to load and save tasks.
+     */
+    public Walter(Storage storage) {
+        ui = new Ui();
+        this.storage = storage;
+        loadTasks();
+    }
+
+    /**
+     * Loads saved tasks, falling back to an empty list with a user-facing warning.
+     */
+    private void loadTasks() {
         try {
             tasks = new TaskList(storage.load());
         } catch (DukeException exception) {
@@ -34,6 +57,50 @@ public class Walter {
             tasks = new TaskList();
             loadWarning = "Walter could not access saved tasks. Starting with an empty list.";
         }
+    }
+
+    /**
+     * Returns Walter's GUI greeting and any warning raised while loading saved tasks.
+     *
+     * @return Greeting suitable for the first Walter dialog.
+     */
+    public String getWelcomeMessage() {
+        String greeting = "Howdy! I'm Walter!\nWhat can I do for you?";
+        return loadWarning == null ? greeting : greeting + "\n" + loadWarning;
+    }
+
+    /**
+     * Processes one command through Walter's existing parser and command architecture.
+     *
+     * @param input Raw command supplied by a GUI or another presentation layer.
+     * @return User-facing response produced by the command.
+     */
+    public String getResponse(String input) {
+        lastCommandCategory = CommandCategory.NORMAL;
+        ByteArrayOutputStream responseBytes = new ByteArrayOutputStream();
+        try (PrintStream responseOutput = new PrintStream(
+                responseBytes, true, StandardCharsets.UTF_8)) {
+            Ui responseUi = new Ui(responseOutput);
+            try {
+                Command command = Parser.parse(input);
+                command.execute(tasks, responseUi, storage);
+                lastCommandCategory = command.getCategory();
+            } catch (DukeException exception) {
+                lastCommandCategory = CommandCategory.ERROR;
+                responseUi.showError(exception.getMessage());
+            }
+        }
+        return responseBytes.toString(StandardCharsets.UTF_8).stripTrailing();
+    }
+
+    /**
+     * Returns the category of the most recently processed GUI response.
+     *
+     * @return Last successful command category, or {@link CommandCategory#ERROR} when processing
+     *         the latest input failed.
+     */
+    public CommandCategory getLastCommandCategory() {
+        return lastCommandCategory;
     }
 
     /**

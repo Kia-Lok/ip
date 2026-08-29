@@ -21,6 +21,11 @@ public class MarkCommand extends Command {
         this.taskIndex = taskIndex;
     }
 
+    @Override
+    public CommandCategory getCategory() {
+        return CommandCategory.STATE_CHANGE;
+    }
+
     /**
      * Marks the selected task as done, displays it, and persists the changed status.
      *

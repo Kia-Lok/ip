@@ -21,6 +21,11 @@ public class UnmarkCommand extends Command {
         this.taskIndex = taskIndex;
     }
 
+    @Override
+    public CommandCategory getCategory() {
+        return CommandCategory.STATE_CHANGE;
+    }
+
     /**
      * Marks the selected task as not done, displays it, and persists the changed status.
      *

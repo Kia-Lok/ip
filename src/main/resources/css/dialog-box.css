@@ -1,0 +1,37 @@
+.dialog-bubble {
+    -fx-background-color: walter-primary-color;
+    -fx-background-radius: 16px 16px 4px 16px;
+    -fx-border-color: walter-primary-color;
+    -fx-border-radius: 16px 16px 4px 16px;
+    -fx-border-width: 1px;
+    -fx-padding: 10px 14px;
+    -fx-text-fill: walter-on-primary-color;
+}
+
+.avatar {
+    -fx-effect: dropshadow(gaussian, rgba(37, 50, 74, 0.18), 4, 0.2, 0, 1);
+}
+
+.reply-label {
+    -fx-background-color: walter-subtle-surface-color;
+    -fx-background-radius: 16px 16px 16px 4px;
+    -fx-border-color: walter-border-color;
+    -fx-border-radius: 16px 16px 16px 4px;
+    -fx-text-fill: walter-text-color;
+}
+
+.add-label {
+    -fx-border-color: walter-add-accent-color;
+}
+
+.state-change-label {
+    -fx-border-color: walter-state-accent-color;
+}
+
+.delete-label {
+    -fx-border-color: walter-delete-accent-color;
+}
+
+.error-label {
+    -fx-border-color: walter-error-accent-color;
+}

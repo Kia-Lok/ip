@@ -21,6 +21,11 @@ public class AddCommand extends Command {
         this.task = task;
     }
 
+    @Override
+    public CommandCategory getCategory() {
+        return CommandCategory.ADD;
+    }
+
     /**
      * Adds the parsed task, displays the updated count, and persists the task list.
      *
