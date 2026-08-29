@@ -1,0 +1,13 @@
+.dialog-bubble {
+    -fx-background-color: #405ac7;
+    -fx-background-radius: 14px 14px 3px 14px;
+    -fx-text-fill: white;
+}
+
+.walter-bubble {
+    -fx-background-color: white;
+    -fx-background-radius: 14px 14px 14px 3px;
+    -fx-border-color: #d8e0ec;
+    -fx-border-radius: 14px 14px 14px 3px;
+    -fx-text-fill: #25324a;
+}
