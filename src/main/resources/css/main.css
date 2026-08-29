@@ -34,7 +34,7 @@
 }
 
 .text-field:focused {
-    -fx-border-color: #4a67d6;
+    -fx-border-color: derive(walter-primary-color, 0.15);
     -fx-border-radius: 10px;
 }
 
@@ -48,11 +48,11 @@
 }
 
 .button:hover {
-    -fx-background-color: #3248a8;
+    -fx-background-color: derive(walter-primary-color, 0.15);
 }
 
 .button:pressed {
-    -fx-background-color: #25377f;
+    -fx-background-color: derive(walter-primary-color, -0.20);
 }
 
 .scroll-bar:vertical {
