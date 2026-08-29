@@ -5,7 +5,7 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import walter.Walter;
 
@@ -17,13 +17,13 @@ public class Main extends Application {
     public void start(Stage stage) {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
         try {
-            BorderPane root = loader.load();
+            AnchorPane root = loader.load();
             loader.<MainWindow>getController().setWalter(new Walter());
 
             stage.setScene(new Scene(root));
             stage.setTitle("Walter");
-            stage.setMinWidth(480);
-            stage.setMinHeight(600);
+            stage.setMinWidth(420);
+            stage.setMinHeight(500);
             stage.show();
         } catch (IOException exception) {
             throw new IllegalStateException("Walter could not load its main window.", exception);
