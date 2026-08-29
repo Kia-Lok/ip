@@ -1,17 +1,17 @@
 .dialog-bubble {
-    -fx-background-color: #405ac7;
+    -fx-background-color: walter-primary-color;
     -fx-background-radius: 16px 16px 4px 16px;
-    -fx-border-color: #405ac7;
+    -fx-border-color: walter-primary-color;
     -fx-border-radius: 16px 16px 4px 16px;
     -fx-border-width: 1px;
     -fx-padding: 10px 14px;
-    -fx-text-fill: white;
+    -fx-text-fill: walter-on-primary-color;
 }
 
 .reply-label {
-    -fx-background-color: white;
+    -fx-background-color: walter-subtle-surface-color;
     -fx-background-radius: 16px 16px 16px 4px;
-    -fx-border-color: #d8e0ec;
+    -fx-border-color: walter-border-color;
     -fx-border-radius: 16px 16px 16px 4px;
-    -fx-text-fill: #25324a;
+    -fx-text-fill: walter-text-color;
 }
