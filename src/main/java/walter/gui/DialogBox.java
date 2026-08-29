@@ -51,7 +51,7 @@ public class DialogBox extends HBox {
     public static DialogBox getWalterDialog(String text) {
         DialogBox dialogBox = new DialogBox(text);
         dialogBox.setAlignment(Pos.TOP_LEFT);
-        dialogBox.dialog.getStyleClass().add("walter-bubble");
+        dialogBox.dialog.getStyleClass().add("reply-label");
         return dialogBox;
     }
 }
