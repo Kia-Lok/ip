@@ -228,11 +228,11 @@ public class Storage {
 
             char escaped = field.charAt(++i);
             switch (escaped) {
-            case '\\' -> result.append('\\');
-            case 't' -> result.append('\t');
-            case 'n' -> result.append('\n');
-            case 'r' -> result.append('\r');
-            default -> throw new DukeException("Malformed saved task text.");
+                case '\\' -> result.append('\\');
+                case 't' -> result.append('\t');
+                case 'n' -> result.append('\n');
+                case 'r' -> result.append('\r');
+                default -> throw new DukeException("Malformed saved task text.");
             }
         }
         return result.toString();
