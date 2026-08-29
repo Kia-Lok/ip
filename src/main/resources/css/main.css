@@ -7,6 +7,10 @@
     walter-muted-text-color: #667085;
     walter-border-color: #d8e0ec;
     walter-on-primary-color: #ffffff;
+    walter-add-accent-color: derive(walter-primary-color, 0.15);
+    walter-state-accent-color: #4f8f6a;
+    walter-delete-accent-color: #b86a73;
+    walter-error-accent-color: #a95059;
 
     -fx-background-color: walter-background-color;
     -fx-font-family: "Arial";

@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import walter.Walter;
+import walter.command.CommandCategory;
 
 /**
  * Controls Walter's main conversation window.
@@ -50,9 +51,10 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() {
         String input = userInput.getText();
         String response = walter.getResponse(input);
+        CommandCategory commandCategory = walter.getLastCommandCategory();
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input),
-                DialogBox.getWalterDialog(response));
+                DialogBox.getWalterDialog(response, commandCategory));
         userInput.clear();
     }
 }

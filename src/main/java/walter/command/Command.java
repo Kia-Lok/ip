@@ -21,6 +21,16 @@ public abstract class Command {
     public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException;
 
     /**
+     * Returns the response category associated with this command.
+     *
+     * @return Category used by presentation layers; ordinary commands are {@link
+     *         CommandCategory#NORMAL} by default.
+     */
+    public CommandCategory getCategory() {
+        return CommandCategory.NORMAL;
+    }
+
+    /**
      * Reports whether this command should terminate the application loop.
      *
      * @return {@code true} if Walter should exit after execution; {@code false} otherwise.

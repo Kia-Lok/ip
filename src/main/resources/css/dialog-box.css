@@ -15,3 +15,19 @@
     -fx-border-radius: 16px 16px 16px 4px;
     -fx-text-fill: walter-text-color;
 }
+
+.add-label {
+    -fx-border-color: walter-add-accent-color;
+}
+
+.state-change-label {
+    -fx-border-color: walter-state-accent-color;
+}
+
+.delete-label {
+    -fx-border-color: walter-delete-accent-color;
+}
+
+.error-label {
+    -fx-border-color: walter-error-accent-color;
+}

@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import walter.command.CommandCategory;
 import walter.storage.Storage;
 
 /**
@@ -32,6 +33,41 @@ public class WalterTest {
         Walter walter = createWalter();
 
         assertEquals("Unknown command.", walter.getResponse("archive book"));
+    }
+
+    @Test
+    public void getResponse_commandCategory_matchesCommandType() {
+        Walter walter = createWalter();
+
+        walter.getResponse("todo read book");
+        assertEquals(CommandCategory.ADD, walter.getLastCommandCategory());
+
+        walter.getResponse("deadline submit report /by 2026-09-04");
+        assertEquals(CommandCategory.ADD, walter.getLastCommandCategory());
+
+        walter.getResponse("event project meeting /at 3pm");
+        assertEquals(CommandCategory.ADD, walter.getLastCommandCategory());
+
+        walter.getResponse("mark 1");
+        assertEquals(CommandCategory.STATE_CHANGE, walter.getLastCommandCategory());
+
+        walter.getResponse("unmark 1");
+        assertEquals(CommandCategory.STATE_CHANGE, walter.getLastCommandCategory());
+
+        walter.getResponse("delete 1");
+        assertEquals(CommandCategory.DELETE, walter.getLastCommandCategory());
+
+        walter.getResponse("list");
+        assertEquals(CommandCategory.NORMAL, walter.getLastCommandCategory());
+    }
+
+    @Test
+    public void getResponse_invalidCommand_setsErrorCategory() {
+        Walter walter = createWalter();
+        walter.getResponse("todo read book");
+
+        assertEquals("Unknown command.", walter.getResponse("archive book"));
+        assertEquals(CommandCategory.ERROR, walter.getLastCommandCategory());
     }
 
     @Test

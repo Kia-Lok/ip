@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
 import walter.command.Command;
+import walter.command.CommandCategory;
 import walter.parser.Parser;
 import walter.storage.Storage;
 import walter.task.TaskList;
@@ -21,6 +22,7 @@ public class Walter {
     private final Storage storage;
     private TaskList tasks;
     private String loadWarning;
+    private CommandCategory lastCommandCategory = CommandCategory.NORMAL;
 
     /**
      * Creates Walter and loads any tasks saved by an earlier run.
@@ -74,6 +76,7 @@ public class Walter {
      * @return User-facing response produced by the command.
      */
     public String getResponse(String input) {
+        lastCommandCategory = CommandCategory.NORMAL;
         ByteArrayOutputStream responseBytes = new ByteArrayOutputStream();
         try (PrintStream responseOutput = new PrintStream(
                 responseBytes, true, StandardCharsets.UTF_8)) {
@@ -81,11 +84,23 @@ public class Walter {
             try {
                 Command command = Parser.parse(input);
                 command.execute(tasks, responseUi, storage);
+                lastCommandCategory = command.getCategory();
             } catch (DukeException exception) {
+                lastCommandCategory = CommandCategory.ERROR;
                 responseUi.showError(exception.getMessage());
             }
         }
         return responseBytes.toString(StandardCharsets.UTF_8).stripTrailing();
+    }
+
+    /**
+     * Returns the category of the most recently processed GUI response.
+     *
+     * @return Last successful command category, or {@link CommandCategory#ERROR} when processing
+     *         the latest input failed.
+     */
+    public CommandCategory getLastCommandCategory() {
+        return lastCommandCategory;
     }
 
     /**

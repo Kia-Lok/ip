@@ -21,6 +21,11 @@ public class DeleteCommand extends Command {
         this.taskIndex = taskIndex;
     }
 
+    @Override
+    public CommandCategory getCategory() {
+        return CommandCategory.DELETE;
+    }
+
     /**
      * Deletes the selected task, displays it, and persists the shortened task list.
      *
