@@ -1,11 +1,17 @@
 package walter.gui;
 
 import java.io.IOException;
+import java.util.Collections;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import walter.command.CommandCategory;
 
@@ -15,13 +21,16 @@ import walter.command.CommandCategory;
 public class DialogBox extends HBox {
     @FXML
     private Label dialog;
+    @FXML
+    private ImageView displayPicture;
 
     /**
      * Loads one dialog bubble and assigns its message text.
      *
      * @param text Message displayed in the bubble.
+     * @param image Avatar displayed beside the bubble.
      */
-    private DialogBox(String text) {
+    private DialogBox(String text, Image image) {
         FXMLLoader loader = new FXMLLoader(DialogBox.class.getResource("/view/DialogBox.fxml"));
         loader.setController(this);
         loader.setRoot(this);
@@ -31,41 +40,55 @@ public class DialogBox extends HBox {
             throw new IllegalStateException("Walter could not load a dialog box.", exception);
         }
         dialog.setText(text);
+        displayPicture.setImage(image);
     }
 
     /**
      * Creates a right-aligned user message.
      *
      * @param text User input to display.
+     * @param image User avatar to display.
      * @return Styled user dialog.
      */
-    public static DialogBox getUserDialog(String text) {
-        return new DialogBox(text);
+    public static DialogBox getUserDialog(String text, Image image) {
+        return new DialogBox(text, image);
     }
 
     /**
      * Creates a left-aligned Walter response.
      *
      * @param text Walter output to display.
+     * @param image Walter avatar to display.
      * @return Styled Walter dialog.
      */
-    public static DialogBox getWalterDialog(String text) {
-        return getWalterDialog(text, CommandCategory.NORMAL);
+    public static DialogBox getWalterDialog(String text, Image image) {
+        return getWalterDialog(text, image, CommandCategory.NORMAL);
     }
 
     /**
      * Creates a left-aligned Walter response with a category-specific visual accent.
      *
      * @param text Walter output to display.
+     * @param image Walter avatar to display.
      * @param category Command category that produced the output.
      * @return Styled Walter dialog.
      */
-    public static DialogBox getWalterDialog(String text, CommandCategory category) {
-        DialogBox dialogBox = new DialogBox(text);
-        dialogBox.setAlignment(Pos.TOP_LEFT);
+    public static DialogBox getWalterDialog(String text, Image image, CommandCategory category) {
+        DialogBox dialogBox = new DialogBox(text, image);
+        dialogBox.flip();
         dialogBox.dialog.getStyleClass().add("reply-label");
         dialogBox.applyCategoryStyle(category);
         return dialogBox;
+    }
+
+    /**
+     * Flips the FXML child order so Walter's avatar appears left of the reply bubble.
+     */
+    private void flip() {
+        ObservableList<Node> children = FXCollections.observableArrayList(getChildren());
+        Collections.reverse(children);
+        getChildren().setAll(children);
+        setAlignment(Pos.TOP_LEFT);
     }
 
     /**

@@ -1,9 +1,13 @@
 package walter.gui;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import walter.Walter;
@@ -21,6 +25,9 @@ public class MainWindow extends AnchorPane {
     private TextField userInput;
     @FXML
     private Button sendButton;
+
+    private final Image userImage = loadAvatar("/images/user-avatar.png");
+    private final Image walterImage = loadAvatar("/images/walter-avatar.png");
 
     private Walter walter;
 
@@ -40,7 +47,8 @@ public class MainWindow extends AnchorPane {
      */
     public void setWalter(Walter walter) {
         this.walter = walter;
-        dialogContainer.getChildren().add(DialogBox.getWalterDialog(walter.getWelcomeMessage()));
+        dialogContainer.getChildren().add(
+                DialogBox.getWalterDialog(walter.getWelcomeMessage(), walterImage));
         userInput.requestFocus();
     }
 
@@ -53,8 +61,26 @@ public class MainWindow extends AnchorPane {
         String response = walter.getResponse(input);
         CommandCategory commandCategory = walter.getLastCommandCategory();
         dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input),
-                DialogBox.getWalterDialog(response, commandCategory));
+                DialogBox.getUserDialog(input, userImage),
+                DialogBox.getWalterDialog(response, walterImage, commandCategory));
         userInput.clear();
+    }
+
+    /**
+     * Loads an avatar from the application's classpath and fails clearly if it is unavailable.
+     *
+     * @param resourcePath Absolute classpath path of the avatar resource.
+     * @return Loaded avatar image.
+     */
+    private static Image loadAvatar(String resourcePath) {
+        try (InputStream imageStream = MainWindow.class.getResourceAsStream(resourcePath)) {
+            if (imageStream == null) {
+                throw new IllegalStateException("Missing Walter avatar resource: " + resourcePath);
+            }
+            return new Image(imageStream);
+        } catch (IOException exception) {
+            throw new IllegalStateException("Walter could not load avatar: " + resourcePath,
+                    exception);
+        }
     }
 }
