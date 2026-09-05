@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import walter.DukeException;
+import walter.place.Place;
 import walter.task.Deadline;
 import walter.task.Event;
 import walter.task.Task;
@@ -22,15 +23,17 @@ import walter.task.Todo;
  */
 public class Storage {
     private static final Path DEFAULT_SAVE_FILE = Path.of("data", "walter.txt");
+    private static final Path DEFAULT_PLACE_FILE = Path.of("data", "places.txt");
     private static final String FIELD_SEPARATOR = "\t";
 
     private final Path saveFile;
+    private final Path placeFile;
 
     /**
      * Creates storage using Walter's production save-file location.
      */
     public Storage() {
-        this(DEFAULT_SAVE_FILE);
+        this(DEFAULT_SAVE_FILE, DEFAULT_PLACE_FILE);
     }
 
     /**
@@ -39,7 +42,18 @@ public class Storage {
      * @param saveFile Location used to load and save tasks.
      */
     public Storage(Path saveFile) {
+        this(saveFile, saveFile.resolveSibling("places.txt"));
+    }
+
+    /**
+     * Creates storage using specified task and place save-file locations.
+     *
+     * @param saveFile Location used to load and save tasks.
+     * @param placeFile Location used to load and save places.
+     */
+    public Storage(Path saveFile, Path placeFile) {
         this.saveFile = saveFile;
+        this.placeFile = placeFile;
     }
 
     /**
@@ -82,6 +96,68 @@ public class Storage {
         } catch (IOException exception) {
             throw new DukeException("Walter could not save your tasks.");
         }
+    }
+
+    /**
+     * Loads saved places in insertion order, or an empty list when no place file exists.
+     *
+     * @return Places reconstructed from the separate place save file.
+     * @throws DukeException If the place file cannot be read or contains a malformed record.
+     */
+    public List<Place> loadPlaces() throws DukeException {
+        if (!Files.exists(placeFile)) {
+            return new ArrayList<>();
+        }
+
+        try {
+            List<Place> places = new ArrayList<>();
+            for (String line : Files.readAllLines(placeFile, StandardCharsets.UTF_8)) {
+                places.add(parseStoredPlace(line));
+            }
+            return places;
+        } catch (IOException exception) {
+            throw new DukeException("Walter could not load saved places.");
+        }
+    }
+
+    /**
+     * Saves places to their separate save file in insertion order.
+     *
+     * @param places Places to persist.
+     * @throws DukeException If the place file cannot be written.
+     */
+    public void savePlaces(List<Place> places) throws DukeException {
+        List<String> lines = new ArrayList<>();
+        for (Place place : places) {
+            lines.add(String.join(
+                    FIELD_SEPARATOR,
+                    "P",
+                    escapeField(place.getName()),
+                    escapeField(place.getAddress())));
+        }
+
+        try {
+            Path parentDirectory = placeFile.getParent();
+            if (parentDirectory != null) {
+                Files.createDirectories(parentDirectory);
+            }
+            Files.write(placeFile, lines, StandardCharsets.UTF_8);
+        } catch (IOException exception) {
+            throw new DukeException("Walter could not save your places.");
+        }
+    }
+
+    /**
+     * Reconstructs one place from its tab-separated storage record.
+     */
+    private Place parseStoredPlace(String line) throws DukeException {
+        String[] fields = line.split(FIELD_SEPARATOR, -1);
+        if (fields.length != 3 || !fields[0].equals("P")) {
+            throw new DukeException("Malformed saved place record.");
+        }
+        return new Place(
+                requireStoredPlaceText(fields[1]),
+                requireStoredPlaceText(fields[2]));
     }
 
     /**
@@ -187,9 +263,20 @@ public class Storage {
      * @throws DukeException If the field is empty or contains malformed escape syntax.
      */
     private String requireStoredText(String field) throws DukeException {
-        String text = unescapeField(field);
+        String text = unescapeField(field, "Malformed saved task text.");
         if (text.isEmpty()) {
             throw new DukeException("Saved task text cannot be empty.");
+        }
+        return text;
+    }
+
+    /**
+     * Decodes one required place field and rejects empty persisted values.
+     */
+    private String requireStoredPlaceText(String field) throws DukeException {
+        String text = unescapeField(field, "Malformed saved place text.");
+        if (text.isEmpty()) {
+            throw new DukeException("Saved place text cannot be empty.");
         }
         return text;
     }
@@ -214,7 +301,7 @@ public class Storage {
      * @return Decoded text.
      * @throws DukeException If an escape sequence is incomplete or unsupported.
      */
-    private String unescapeField(String field) throws DukeException {
+    private String unescapeField(String field, String malformedTextMessage) throws DukeException {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < field.length(); i++) {
             char current = field.charAt(i);
@@ -223,7 +310,7 @@ public class Storage {
                 continue;
             }
             if (i + 1 >= field.length()) {
-                throw new DukeException("Malformed saved task text.");
+                throw new DukeException(malformedTextMessage);
             }
 
             char escaped = field.charAt(++i);
@@ -232,7 +319,7 @@ public class Storage {
                 case 't' -> result.append('\t');
                 case 'n' -> result.append('\n');
                 case 'r' -> result.append('\r');
-                default -> throw new DukeException("Malformed saved task text.");
+                default -> throw new DukeException(malformedTextMessage);
             }
         }
         return result.toString();

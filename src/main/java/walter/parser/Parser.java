@@ -5,14 +5,18 @@ import java.time.format.DateTimeParseException;
 
 import walter.DukeException;
 import walter.command.AddCommand;
+import walter.command.AddPlaceCommand;
 import walter.command.Command;
 import walter.command.DeleteCommand;
+import walter.command.DeletePlaceCommand;
 import walter.command.ExitCommand;
 import walter.command.FindCommand;
 import walter.command.ListCommand;
+import walter.command.ListPlacesCommand;
 import walter.command.MarkCommand;
 import walter.command.OnCommand;
 import walter.command.UnmarkCommand;
+import walter.place.Place;
 import walter.task.Deadline;
 import walter.task.Event;
 import walter.task.Todo;
@@ -27,6 +31,7 @@ public class Parser {
     private static final String EVENT_AT_DELIMITER = "/at";
     private static final String EVENT_FROM_DELIMITER = "/from";
     private static final String EVENT_TO_DELIMITER = "/to";
+    private static final String PLACE_ADDRESS_DELIMITER = "/at";
 
     /**
      * Parses one input line into the corresponding executable command.
@@ -40,6 +45,9 @@ public class Parser {
         String commandWord = getCommandWord(command);
         if (commandWord.equals("list") && isExactCommand(command, "list")) {
             return new ListCommand();
+        }
+        if (commandWord.equals("places") && isExactCommand(command, "places")) {
+            return new ListPlacesCommand();
         }
         if (commandWord.equals("bye") && isExactCommand(command, "bye")) {
             return new ExitCommand();
@@ -59,6 +67,9 @@ public class Parser {
         if (commandWord.equals("delete")) {
             return new DeleteCommand(parseTaskIndex(command));
         }
+        if (commandWord.equals("deleteplace")) {
+            return new DeletePlaceCommand(parsePlaceIndex(command));
+        }
         if (commandWord.equals("todo")) {
             return new AddCommand(parseTodo(command));
         }
@@ -67,6 +78,9 @@ public class Parser {
         }
         if (commandWord.equals("event")) {
             return new AddCommand(parseEvent(command));
+        }
+        if (commandWord.equals("place")) {
+            return new AddPlaceCommand(parsePlace(command));
         }
         throw new DukeException("Unknown command.");
     }
@@ -243,6 +257,40 @@ public class Parser {
     }
 
     /**
+     * Parses a place name and address separated by exactly one {@code /at} token.
+     *
+     * @param input Complete place command.
+     * @return Place containing the parsed name and address.
+     * @throws DukeException If the name, delimiter, or address is invalid.
+     */
+    private static Place parsePlace(String input) throws DukeException {
+        String placeDetails = argumentAfter(input, "place");
+        if (placeDetails.isEmpty()) {
+            throw new DukeException("Place name cannot be empty.");
+        }
+
+        int delimiterIndex = findDelimiter(placeDetails, PLACE_ADDRESS_DELIMITER, 0);
+        int secondDelimiterIndex = delimiterIndex < 0
+                ? -1
+                : findDelimiter(placeDetails, PLACE_ADDRESS_DELIMITER,
+                        delimiterIndex + PLACE_ADDRESS_DELIMITER.length());
+        if (delimiterIndex < 0 || secondDelimiterIndex >= 0) {
+            throw new DukeException("Place requires exactly one /at.");
+        }
+
+        String name = placeDetails.substring(0, delimiterIndex).strip();
+        String address = placeDetails.substring(
+                delimiterIndex + PLACE_ADDRESS_DELIMITER.length()).strip();
+        if (name.isEmpty()) {
+            throw new DukeException("Place name cannot be empty.");
+        }
+        if (address.isEmpty()) {
+            throw new DukeException("Place address cannot be empty.");
+        }
+        return new Place(name, address);
+    }
+
+    /**
      * Parses a one-based task number and returns its zero-based index.
      *
      * @param input Complete command containing a task number.
@@ -265,6 +313,25 @@ public class Parser {
             throw new DukeException("Task number must be an integer.");
         }
         return taskNumber - 1;
+    }
+
+    /**
+     * Parses a one-based place number and returns its zero-based index.
+     *
+     * @param input Complete deleteplace command.
+     * @return Zero-based place index.
+     * @throws DukeException If the place number is missing or is not an integer.
+     */
+    private static int parsePlaceIndex(String input) throws DukeException {
+        String placeNumberText = argumentAfter(input, "deleteplace");
+        if (placeNumberText.isEmpty()) {
+            throw new DukeException("Place number is required.");
+        }
+        try {
+            return Integer.parseInt(placeNumberText) - 1;
+        } catch (NumberFormatException exception) {
+            throw new DukeException("Place number must be an integer.");
+        }
     }
 
     /**

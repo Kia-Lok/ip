@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
+import walter.place.Place;
 import walter.task.Deadline;
 import walter.task.Task;
 
@@ -160,6 +161,23 @@ public class Ui {
     }
 
     /**
+     * Displays saved places in insertion order using one-based numbering.
+     *
+     * @param places Places to display.
+     */
+    public void showPlaces(List<Place> places) {
+        if (places.isEmpty()) {
+            output.println("Jesse, we don't have any places saved yet.");
+            return;
+        }
+
+        output.println("Jesse, here are the places we've saved:");
+        for (int i = 0; i < places.size(); i++) {
+            output.println((i + 1) + ". " + places.get(i));
+        }
+    }
+
+    /**
      * Displays tasks in their existing order using one-based numbering.
      *
      * @param tasks Tasks to display.
@@ -195,6 +213,30 @@ public class Ui {
     }
 
     /**
+     * Displays confirmation that a place was saved.
+     *
+     * @param place Place that was saved.
+     * @param placeCount Number of places after the addition.
+     */
+    public void showAddedPlace(Place place, int placeCount) {
+        output.println("Walter has saved this place:");
+        output.println(place);
+        showPlaceCount(placeCount);
+    }
+
+    /**
+     * Displays confirmation that a place was deleted.
+     *
+     * @param place Place that was deleted.
+     * @param placeCount Number of places after the deletion.
+     */
+    public void showDeletedPlace(Place place, int placeCount) {
+        output.println("Walter has removed this place:");
+        output.println(place);
+        showPlaceCount(placeCount);
+    }
+
+    /**
      * Displays confirmation that a task was marked done.
      *
      * @param task Task whose status was changed.
@@ -222,5 +264,13 @@ public class Ui {
     private void showTaskCount(int taskCount) {
         String taskWord = taskCount == 1 ? "task" : "tasks";
         output.println("Now you have " + taskCount + " " + taskWord + " in the list.");
+    }
+
+    /**
+     * Displays the current place count with the correct singular or plural noun.
+     */
+    private void showPlaceCount(int placeCount) {
+        String placeWord = placeCount == 1 ? "place" : "places";
+        output.println("Now you have " + placeCount + " saved " + placeWord + ".");
     }
 }

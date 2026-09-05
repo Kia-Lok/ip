@@ -621,6 +621,61 @@ Expected responses omit the surrounding separator lines.
         ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Walter: Bye. Hope to see you again soon!"]
       ]
+    },
+    {
+      "id": "place-lifecycle-and-errors",
+      "aim": "Verify places can be added, listed, deleted, and rejected safely when syntax or indexes are invalid.",
+      "inputs": [
+        "places",
+        "place Alex's home /at 123 Clementi Ave 3",
+        "place NUS Central Library /at 12 Computing Drive",
+        "places",
+        "place",
+        "place Alex's home",
+        "place /at 123 Clementi Ave 3",
+        "place Alex's home /at",
+        "place home /at first /at second",
+        "deleteplace abc",
+        "deleteplace 999",
+        "deleteplace 1",
+        "places",
+        "bye"
+      ],
+      "expected_outputs": [
+        ["Jesse, we don't have any places saved yet."],
+        [
+          "Walter has saved this place:",
+          "Alex's home — 123 Clementi Ave 3",
+          "Now you have 1 saved place."
+        ],
+        [
+          "Walter has saved this place:",
+          "NUS Central Library — 12 Computing Drive",
+          "Now you have 2 saved places."
+        ],
+        [
+          "Jesse, here are the places we've saved:",
+          "1. Alex's home — 123 Clementi Ave 3",
+          "2. NUS Central Library — 12 Computing Drive"
+        ],
+        ["Place name cannot be empty."],
+        ["Place requires exactly one /at."],
+        ["Place name cannot be empty."],
+        ["Place address cannot be empty."],
+        ["Place requires exactly one /at."],
+        ["Place number must be an integer."],
+        ["Place number is out of range."],
+        [
+          "Walter has removed this place:",
+          "Alex's home — 123 Clementi Ave 3",
+          "Now you have 1 saved place."
+        ],
+        [
+          "Jesse, here are the places we've saved:",
+          "1. NUS Central Library — 12 Computing Drive"
+        ],
+        ["Walter: Bye. Hope to see you again soon!"]
+      ]
     }
   ]
 }
