@@ -13,6 +13,8 @@ public class Task {
      * @param description Description of the task.
      */
     public Task(String description) {
+        assert description != null && !description.isBlank()
+                : "Task description should be validated before task creation";
         this.description = description;
         isDone = false;
     }
