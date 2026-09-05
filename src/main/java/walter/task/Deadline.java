@@ -21,6 +21,7 @@ public class Deadline extends Task {
      */
     public Deadline(String description, LocalDate dueDate) {
         super(description);
+        assert dueDate != null : "Deadline date should be validated before task creation";
         this.dueDate = dueDate;
     }
 

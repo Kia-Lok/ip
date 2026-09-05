@@ -30,6 +30,7 @@ public class TaskList {
      * @throws DukeException If the supplied list exceeds Walter's supported capacity.
      */
     public TaskList(List<Task> tasks) throws DukeException {
+        assert tasks != null : "Loaded task collection should not be null";
         if (tasks.size() > MAX_TASKS) {
             throw new DukeException("Saved task list exceeds the supported capacity.");
         }
@@ -43,6 +44,7 @@ public class TaskList {
      * @throws DukeException If the task list has reached its supported capacity.
      */
     public void add(Task task) throws DukeException {
+        assert task != null : "Only a valid task should be added to the task list";
         if (tasks.size() >= MAX_TASKS) {
             throw new DukeException("Task list is full.");
         }
