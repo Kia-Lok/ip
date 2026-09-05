@@ -23,6 +23,11 @@ import walter.task.Todo;
  * input/output, mutating the task list, or saving data.
  */
 public class Parser {
+    private static final String DEADLINE_DELIMITER = "/by";
+    private static final String EVENT_AT_DELIMITER = "/at";
+    private static final String EVENT_FROM_DELIMITER = "/from";
+    private static final String EVENT_TO_DELIMITER = "/to";
+
     /**
      * Parses one input line into the corresponding executable command.
      *
@@ -137,13 +142,14 @@ public class Parser {
             throw new DukeException("Deadline description cannot be empty.");
         }
 
-        int delimiterIndex = findDelimiter(taskDetails, "/by", 0);
+        int delimiterIndex = findDelimiter(taskDetails, DEADLINE_DELIMITER, 0);
         if (delimiterIndex < 0) {
             throw new DukeException("Deadline requires /by.");
         }
 
         String description = taskDetails.substring(0, delimiterIndex).strip();
-        String byText = taskDetails.substring(delimiterIndex + "/by".length()).strip();
+        String byText = taskDetails.substring(
+                delimiterIndex + DEADLINE_DELIMITER.length()).strip();
         if (description.isEmpty()) {
             throw new DukeException("Deadline description cannot be empty.");
         }
@@ -167,36 +173,63 @@ public class Parser {
             throw new DukeException("Event description cannot be empty.");
         }
 
-        int atDelimiterIndex = findDelimiter(taskDetails, "/at", 0);
+        int atDelimiterIndex = findDelimiter(taskDetails, EVENT_AT_DELIMITER, 0);
         if (atDelimiterIndex >= 0) {
-            String description = taskDetails.substring(0, atDelimiterIndex).strip();
-            String atTime = taskDetails.substring(atDelimiterIndex + "/at".length()).strip();
-            if (description.isEmpty()) {
-                throw new DukeException("Event description cannot be empty.");
-            }
-            if (atTime.isEmpty()) {
-                throw new DukeException("Event date/time cannot be empty.");
-            }
-            return new Event(description, atTime);
+            return parseAtEvent(taskDetails, atDelimiterIndex);
         }
+        return parseFromToEvent(taskDetails);
+    }
 
-        int fromDelimiterIndex = findDelimiter(taskDetails, "/from", 0);
+    /**
+     * Parses event details that use the {@code /at} format.
+     *
+     * @param taskDetails Event details following the command word.
+     * @param atDelimiterIndex Index of the validated {@code /at} delimiter.
+     * @return Event containing one time description.
+     * @throws DukeException If the event description or time is empty.
+     */
+    private static Event parseAtEvent(String taskDetails, int atDelimiterIndex)
+            throws DukeException {
+        String description = taskDetails.substring(0, atDelimiterIndex).strip();
+        String atTime = taskDetails.substring(
+                atDelimiterIndex + EVENT_AT_DELIMITER.length()).strip();
+        if (description.isEmpty()) {
+            throw new DukeException("Event description cannot be empty.");
+        }
+        if (atTime.isEmpty()) {
+            throw new DukeException("Event date/time cannot be empty.");
+        }
+        return new Event(description, atTime);
+    }
+
+    /**
+     * Parses event details that use the {@code /from} and {@code /to} format.
+     *
+     * @param taskDetails Event details following the command word.
+     * @return Event containing start and end time descriptions.
+     * @throws DukeException If either delimiter or any event detail is missing.
+     */
+    private static Event parseFromToEvent(String taskDetails) throws DukeException {
+        int fromDelimiterIndex = findDelimiter(taskDetails, EVENT_FROM_DELIMITER, 0);
         if (fromDelimiterIndex < 0) {
-            if (findDelimiter(taskDetails, "/to", 0) >= 0) {
+            if (findDelimiter(taskDetails, EVENT_TO_DELIMITER, 0) >= 0) {
                 throw new DukeException("Event requires /from command when given /to command.");
             }
             throw new DukeException("Event requires /at or /from and /to.");
         }
         int toDelimiterIndex = findDelimiter(
-                taskDetails, "/to", fromDelimiterIndex + "/from".length());
+                taskDetails,
+                EVENT_TO_DELIMITER,
+                fromDelimiterIndex + EVENT_FROM_DELIMITER.length());
         if (toDelimiterIndex < 0) {
             throw new DukeException("Event requires /to command when given /from command.");
         }
 
         String description = taskDetails.substring(0, fromDelimiterIndex).strip();
         String startTime = taskDetails.substring(
-                fromDelimiterIndex + "/from".length(), toDelimiterIndex).strip();
-        String endTime = taskDetails.substring(toDelimiterIndex + "/to".length()).strip();
+                fromDelimiterIndex + EVENT_FROM_DELIMITER.length(), toDelimiterIndex).strip();
+        String endTime = taskDetails.substring(
+                toDelimiterIndex + EVENT_TO_DELIMITER.length()).strip();
         if (description.isEmpty()) {
             throw new DukeException("Event description cannot be empty.");
         }

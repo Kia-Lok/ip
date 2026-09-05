@@ -126,9 +126,7 @@ public class Ui {
         }
 
         output.println("Jesse, here's what we've got on the board:");
-        for (int i = 0; i < tasks.size(); i++) {
-            output.println((i + 1) + ". " + tasks.get(i));
-        }
+        showNumberedTasks(tasks);
     }
 
     /**
@@ -145,9 +143,7 @@ public class Ui {
         }
 
         output.println("Here are the deadlines on " + displayDate + ":");
-        for (int i = 0; i < deadlines.size(); i++) {
-            output.println((i + 1) + ". " + deadlines.get(i));
-        }
+        showNumberedTasks(deadlines);
     }
 
     /**
@@ -160,8 +156,17 @@ public class Ui {
         }
 
         output.println("Here are the matching tasks in your list:");
-        for (int i = 0; i < matches.size(); i++) {
-            output.println((i + 1) + ". " + matches.get(i));
+        showNumberedTasks(matches);
+    }
+
+    /**
+     * Displays tasks in their existing order using one-based numbering.
+     *
+     * @param tasks Tasks to display.
+     */
+    private void showNumberedTasks(List<? extends Task> tasks) {
+        for (int i = 0; i < tasks.size(); i++) {
+            output.println((i + 1) + ". " + tasks.get(i));
         }
     }
 
