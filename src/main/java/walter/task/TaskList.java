@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import walter.DukeException;
 
@@ -123,13 +124,11 @@ public class TaskList {
      * @return Deadlines due on the given date, preserving task-list order.
      */
     public List<Deadline> getDeadlinesOn(LocalDate date) {
-        List<Deadline> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task instanceof Deadline deadline && deadline.getBy().equals(date)) {
-                matches.add(deadline);
-            }
-        }
-        return matches;
+        return tasks.stream()
+                .filter(Deadline.class::isInstance)
+                .map(Deadline.class::cast)
+                .filter(deadline -> deadline.getBy().equals(date))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -137,14 +136,11 @@ public class TaskList {
      */
     public List<Task> find(String keyword) {
         String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
-        List<Task> matches = new ArrayList<>();
-        for (Task task : this.tasks) {
-            String normalizedDescription = task.getDescription().toLowerCase(Locale.ROOT);
-            if (normalizedDescription.contains(normalizedKeyword)) {
-                matches.add(task);
-            }
-        }
-        return matches;
+        return tasks.stream()
+                .filter(task -> task.getDescription()
+                        .toLowerCase(Locale.ROOT)
+                        .contains(normalizedKeyword))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
