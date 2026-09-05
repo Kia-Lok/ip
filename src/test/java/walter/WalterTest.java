@@ -19,11 +19,21 @@ public class WalterTest {
     private Path temporaryDirectory;
 
     @Test
+    public void getWelcomeMessage_defaultMessage_breakingBadThemeGreetingReturned() {
+        Walter walter = createWalter();
+
+        assertEquals("Jesse, focus. We’ve got things to cook.\n"
+                + "Tell me what needs to be done, and I’ll handle the list.\n"
+                + "Start with `list`, `todo <task>`, or "
+                + "`event <task> /from <start> /to <end>`.", walter.getWelcomeMessage());
+    }
+
+    @Test
     public void getResponse_statefulCommands_responsesAndStatePreserved() {
         Walter walter = createWalter();
 
         assertTrue(walter.getResponse("todo read book").contains("[T][ ] read book"));
-        assertEquals("Here are the tasks in your list:\n1. [T][ ] read book",
+        assertEquals("Jesse, here's what we've got on the board:\n1. [T][ ] read book",
                 walter.getResponse("list"));
         assertTrue(walter.getResponse("mark 1").contains("[T][X] read book"));
     }
@@ -32,7 +42,20 @@ public class WalterTest {
     public void getResponse_invalidCommand_errorReturned() {
         Walter walter = createWalter();
 
-        assertEquals("Unknown command.", walter.getResponse("archive book"));
+        assertEquals("Jesse, stop giving me unknown commands.",
+                walter.getResponse("archive book"));
+    }
+
+    @Test
+    public void getResponse_knownErrorTypes_themedMessagesRemainDistinct() {
+        Walter walter = createWalter();
+
+        assertEquals("Jesse, I need a task. Give me something to work with.",
+                walter.getResponse("todo"));
+        assertEquals("Jesse, that task doesn't exist.", walter.getResponse("mark 1"));
+        assertEquals("Jesse, that date makes no sense.",
+                walter.getResponse("deadline report /by tomorrow"));
+        assertEquals("Keyword is required for the find command.", walter.getResponse("find"));
     }
 
     @Test
@@ -66,7 +89,8 @@ public class WalterTest {
         Walter walter = createWalter();
         walter.getResponse("todo read book");
 
-        assertEquals("Unknown command.", walter.getResponse("archive book"));
+        assertEquals("Jesse, stop giving me unknown commands.",
+                walter.getResponse("archive book"));
         assertEquals(CommandCategory.ERROR, walter.getLastCommandCategory());
     }
 

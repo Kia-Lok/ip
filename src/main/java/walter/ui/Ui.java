@@ -121,11 +121,11 @@ public class Ui {
      */
     public void showTaskList(List<Task> tasks) {
         if (tasks.isEmpty()) {
-            output.println("There are currently no items on your list.");
+            output.println("Jesse, the board's clean. Nothing to do.");
             return;
         }
 
-        output.println("Here are the tasks in your list:");
+        output.println("Jesse, here's what we've got on the board:");
         for (int i = 0; i < tasks.size(); i++) {
             output.println((i + 1) + ". " + tasks.get(i));
         }

@@ -1,11 +1,12 @@
 .root {
-    walter-primary-color: #405ac7;
-    walter-background-color: #f4f7fb;
-    walter-surface-color: #ffffff;
-    walter-subtle-surface-color: #eef2f7;
-    walter-text-color: #25324a;
-    walter-muted-text-color: #667085;
-    walter-border-color: #d8e0ec;
+    walter-primary-color: #315b3a;
+    walter-user-bubble-color: rgba(49, 91, 58, 0.93);
+    walter-background-color: #d9d0b8;
+    walter-surface-color: rgba(250, 248, 240, 0.94);
+    walter-subtle-surface-color: rgba(239, 235, 219, 0.94);
+    walter-text-color: #202820;
+    walter-muted-text-color: #62685c;
+    walter-border-color: #9da28f;
     walter-on-primary-color: #ffffff;
     walter-add-accent-color: derive(walter-primary-color, 0.15);
     walter-state-accent-color: #4f8f6a;
@@ -13,14 +14,21 @@
     walter-error-accent-color: #a95059;
 
     -fx-background-color: walter-background-color;
+    -fx-background-image: url("../images/background-field.png");
+    -fx-background-position: center bottom;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
     -fx-font-family: "Arial";
     -fx-font-size: 14px;
     -fx-text-fill: walter-text-color;
 }
 
-.scroll-pane,
-.scroll-pane > .viewport {
+.scroll-pane {
     -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: rgba(20, 26, 20, 0.12);
 }
 
 .input-area {
@@ -30,24 +38,25 @@
 
 .text-field {
     -fx-background-color: walter-surface-color;
-    -fx-background-radius: 10px;
+    -fx-background-radius: 18px;
     -fx-border-color: walter-border-color;
+    -fx-border-radius: 18px;
     -fx-prompt-text-fill: walter-muted-text-color;
     -fx-text-fill: walter-text-color;
-    -fx-padding: 10px 12px;
+    -fx-padding: 10px 14px;
 }
 
 .text-field:focused {
     -fx-border-color: derive(walter-primary-color, 0.15);
-    -fx-border-radius: 10px;
+    -fx-border-width: 1.5px;
 }
 
 .button {
     -fx-background-color: walter-primary-color;
-    -fx-background-radius: 10px;
+    -fx-background-radius: 18px;
     -fx-text-fill: walter-on-primary-color;
     -fx-font-weight: bold;
-    -fx-padding: 10px 18px;
+    -fx-padding: 10px 20px;
     -fx-cursor: hand;
 }
 
@@ -60,7 +69,7 @@
 }
 
 .scroll-bar:vertical {
-    -fx-background-color: walter-background-color;
+    -fx-background-color: rgba(239, 235, 219, 0.55);
     -fx-pref-width: 9px;
 }
 
