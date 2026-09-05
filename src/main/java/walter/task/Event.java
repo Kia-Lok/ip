@@ -16,6 +16,8 @@ public class Event extends Task {
      */
     public Event(String description, String atTime) {
         super(description);
+        assert atTime != null && !atTime.isBlank()
+                : "Event time should be validated before task creation";
         this.atTime = atTime;
         startTime = null;
         endTime = null;
@@ -30,6 +32,9 @@ public class Event extends Task {
      */
     public Event(String description, String startTime, String endTime) {
         super(description);
+        assert startTime != null && !startTime.isBlank()
+                && endTime != null && !endTime.isBlank()
+                : "Event time range should be validated before task creation";
         atTime = null;
         this.startTime = startTime;
         this.endTime = endTime;
