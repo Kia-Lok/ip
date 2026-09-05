@@ -65,7 +65,10 @@ public class Walter {
      * @return Greeting suitable for the first Walter dialog.
      */
     public String getWelcomeMessage() {
-        String greeting = "Howdy! I'm Walter!\nWhat can I do for you?";
+        String greeting = "Jesse, focus. We’ve got things to cook.\n"
+                + "Tell me what needs to be done, and I’ll handle the list.\n"
+                + "Start with `list`, `todo <task>`, or "
+                + "`event <task> /from <start> /to <end>`.";
         return loadWarning == null ? greeting : greeting + "\n" + loadWarning;
     }
 

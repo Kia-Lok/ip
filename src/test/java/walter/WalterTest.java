@@ -19,6 +19,16 @@ public class WalterTest {
     private Path temporaryDirectory;
 
     @Test
+    public void getWelcomeMessage_defaultMessage_breakingBadThemeGreetingReturned() {
+        Walter walter = createWalter();
+
+        assertEquals("Jesse, focus. We’ve got things to cook.\n"
+                + "Tell me what needs to be done, and I’ll handle the list.\n"
+                + "Start with `list`, `todo <task>`, or "
+                + "`event <task> /from <start> /to <end>`.", walter.getWelcomeMessage());
+    }
+
+    @Test
     public void getResponse_statefulCommands_responsesAndStatePreserved() {
         Walter walter = createWalter();
 

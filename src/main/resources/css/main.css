@@ -1,11 +1,11 @@
 .root {
-    walter-primary-color: #405ac7;
-    walter-background-color: #f4f7fb;
-    walter-surface-color: #ffffff;
-    walter-subtle-surface-color: #eef2f7;
-    walter-text-color: #25324a;
-    walter-muted-text-color: #667085;
-    walter-border-color: #d8e0ec;
+    walter-primary-color: #315b3a;
+    walter-background-color: #d9d0b8;
+    walter-surface-color: rgba(250, 248, 240, 0.97);
+    walter-subtle-surface-color: rgba(239, 235, 219, 0.97);
+    walter-text-color: #202820;
+    walter-muted-text-color: #62685c;
+    walter-border-color: #9da28f;
     walter-on-primary-color: #ffffff;
     walter-add-accent-color: derive(walter-primary-color, 0.15);
     walter-state-accent-color: #4f8f6a;
@@ -13,14 +13,21 @@
     walter-error-accent-color: #a95059;
 
     -fx-background-color: walter-background-color;
+    -fx-background-image: url("../images/desert-background.png");
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
     -fx-font-family: "Arial";
     -fx-font-size: 14px;
     -fx-text-fill: walter-text-color;
 }
 
-.scroll-pane,
-.scroll-pane > .viewport {
+.scroll-pane {
     -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: rgba(20, 26, 20, 0.28);
 }
 
 .input-area {
