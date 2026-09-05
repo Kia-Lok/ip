@@ -28,3 +28,22 @@ expected output
 ## Feature XYZ
 
 // Feature details
+
+## Managing places
+
+Walter can save useful place names and addresses separately from tasks.
+
+- Add a place: `place <name> /at <address>`
+- List saved places: `places`
+- Delete a place using its number from the list: `deleteplace <index>`
+
+For example:
+
+```text
+place Alex's home /at 123 Clementi Ave 3
+places
+deleteplace 1
+```
+
+Place names and addresses must both be non-empty, and an add command must contain exactly one
+`/at` separator. Saved places remain available when Walter is restarted.

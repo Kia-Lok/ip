@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import walter.DukeException;
+import walter.place.Place;
 import walter.task.Deadline;
 import walter.task.Event;
 import walter.task.Task;
@@ -158,6 +159,31 @@ public class StorageTest {
         writeSaveFile("T\t0\tbad\\q");
 
         assertThrows(DukeException.class, () -> createStorage().load());
+    }
+
+    @Test
+    public void saveLoadPlaces_multiplePlaces_roundTripPreserved() throws DukeException {
+        Storage storage = createStorage();
+        storage.savePlaces(List.of(
+                new Place("Alex's home", "123 Clementi Ave 3"),
+                new Place("NUS\\tLibrary", "12 Computing Drive\\nLevel 1")));
+
+        List<Place> loaded = storage.loadPlaces();
+
+        assertEquals(2, loaded.size());
+        assertEquals("Alex's home", loaded.get(0).getName());
+        assertEquals("123 Clementi Ave 3", loaded.get(0).getAddress());
+        assertEquals("NUS\\tLibrary", loaded.get(1).getName());
+        assertEquals("12 Computing Drive\\nLevel 1", loaded.get(1).getAddress());
+    }
+
+    @Test
+    public void loadPlaces_malformedRecord_exceptionThrown() throws IOException {
+        Path placeFile = temporaryDirectory.resolve("data").resolve("places.txt");
+        Files.createDirectories(placeFile.getParent());
+        Files.writeString(placeFile, "P\\tmissing-address", StandardCharsets.UTF_8);
+
+        assertThrows(DukeException.class, () -> createStorage().loadPlaces());
     }
 
     /**

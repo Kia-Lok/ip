@@ -7,10 +7,13 @@ import org.junit.jupiter.api.Test;
 
 import walter.DukeException;
 import walter.command.AddCommand;
+import walter.command.AddPlaceCommand;
 import walter.command.DeleteCommand;
+import walter.command.DeletePlaceCommand;
 import walter.command.ExitCommand;
 import walter.command.FindCommand;
 import walter.command.ListCommand;
+import walter.command.ListPlacesCommand;
 import walter.command.MarkCommand;
 import walter.command.OnCommand;
 import walter.command.UnmarkCommand;
@@ -103,6 +106,39 @@ public class ParserTest {
     @Test
     public void parse_validFind_findCommandReturned() throws DukeException {
         assertInstanceOf(FindCommand.class, Parser.parse("find book"));
+    }
+
+    @Test
+    public void parse_validPlace_addPlaceCommandReturned() throws DukeException {
+        assertInstanceOf(
+                AddPlaceCommand.class,
+                Parser.parse("place Alex's home /at 123 Clementi Ave 3"));
+    }
+
+    @Test
+    public void parse_invalidPlaceDetails_exceptionThrown() {
+        assertThrows(DukeException.class, () -> Parser.parse("place"));
+        assertThrows(DukeException.class, () -> Parser.parse("place Alex's home"));
+        assertThrows(DukeException.class, () -> Parser.parse("place /at 123 Clementi Ave 3"));
+        assertThrows(DukeException.class, () -> Parser.parse("place Alex's home /at"));
+        assertThrows(DukeException.class, () ->
+                Parser.parse("place home /at first /at second"));
+    }
+
+    @Test
+    public void parse_placesCommand_listPlacesCommandReturned() throws DukeException {
+        assertInstanceOf(ListPlacesCommand.class, Parser.parse("places"));
+    }
+
+    @Test
+    public void parse_deletePlaceCommand_deletePlaceCommandReturned() throws DukeException {
+        assertInstanceOf(DeletePlaceCommand.class, Parser.parse("deleteplace 1"));
+    }
+
+    @Test
+    public void parse_invalidDeletePlaceIndex_exceptionThrown() {
+        assertThrows(DukeException.class, () -> Parser.parse("deleteplace"));
+        assertThrows(DukeException.class, () -> Parser.parse("deleteplace abc"));
     }
 
     @Test
