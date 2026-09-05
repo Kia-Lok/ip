@@ -14,7 +14,7 @@
     walter-error-accent-color: #a95059;
 
     -fx-background-color: walter-background-color;
-    -fx-background-image: url("../images/desert-background.png");
+    -fx-background-image: url("../images/background-field.png");
     -fx-background-position: center bottom;
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;

@@ -33,7 +33,7 @@ public class WalterTest {
         Walter walter = createWalter();
 
         assertTrue(walter.getResponse("todo read book").contains("[T][ ] read book"));
-        assertEquals("Here are the tasks in your list:\n1. [T][ ] read book",
+        assertEquals("Jesse, here's what we've got on the board:\n1. [T][ ] read book",
                 walter.getResponse("list"));
         assertTrue(walter.getResponse("mark 1").contains("[T][X] read book"));
     }

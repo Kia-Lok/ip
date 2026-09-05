@@ -86,7 +86,7 @@ Expected responses omit the surrounding separator lines.
           "Now you have 3 tasks in the list."
         ],
         [
-          "Here are the tasks in your list:",
+          "Jesse, here's what we've got on the board:",
           "1. [T][ ] read book",
           "2. [T][ ] return book",
           "3. [T][ ] buy bread"
@@ -96,7 +96,7 @@ Expected responses omit the surrounding separator lines.
           "[T][X] return book"
         ],
         [
-          "Here are the tasks in your list:",
+          "Jesse, here's what we've got on the board:",
           "1. [T][ ] read book",
           "2. [T][X] return book",
           "3. [T][ ] buy bread"
@@ -106,7 +106,7 @@ Expected responses omit the surrounding separator lines.
           "[T][ ] return book"
         ],
         [
-          "Here are the tasks in your list:",
+          "Jesse, here's what we've got on the board:",
           "1. [T][ ] read book",
           "2. [T][ ] return book",
           "3. [T][ ] buy bread"
@@ -143,7 +143,7 @@ Expected responses omit the surrounding separator lines.
           "Now you have 3 tasks in the list."
         ],
         [
-          "Here are the tasks in your list:",
+          "Jesse, here's what we've got on the board:",
           "1. [T][ ] borrow book",
           "2. [D][ ] return book (by: Aug 30 2026)",
           "3. [E][ ] project meeting (at: Mon 2-4pm)"
@@ -153,7 +153,7 @@ Expected responses omit the surrounding separator lines.
           "[D][X] return book (by: Aug 30 2026)"
         ],
         [
-          "Here are the tasks in your list:",
+          "Jesse, here's what we've got on the board:",
           "1. [T][ ] borrow book",
           "2. [D][X] return book (by: Aug 30 2026)",
           "3. [E][ ] project meeting (at: Mon 2-4pm)"
@@ -176,7 +176,7 @@ Expected responses omit the surrounding separator lines.
           "Now you have 1 task in the list."
         ],
         [
-          "Here are the tasks in your list:",
+          "Jesse, here's what we've got on the board:",
           "1. [E][ ] project meeting (from: Mon 2pm to: 4pm)"
         ],
         ["Walter: Bye. Hope to see you again soon!"]
@@ -208,7 +208,7 @@ Expected responses omit the surrounding separator lines.
         ["Unknown command."],
         ["Unknown command."],
         ["Unknown command."],
-        ["There are currently no items on your list."],
+        ["Jesse, the board's clean. Nothing to do."],
         ["Walter: Bye. Hope to see you again soon!"]
       ]
     },
@@ -254,7 +254,7 @@ Expected responses omit the surrounding separator lines.
         ["Event description cannot be empty."],
         ["Event start cannot be empty."],
         ["Event end cannot be empty."],
-        ["There are currently no items on your list."],
+        ["Jesse, the board's clean. Nothing to do."],
         ["Walter: Bye. Hope to see you again soon!"]
       ]
     },
@@ -307,7 +307,7 @@ Expected responses omit the surrounding separator lines.
         ["Deadline date must be in yyyy-MM-dd format."],
         ["Deadline date must be in yyyy-MM-dd format."],
         [
-          "Here are the tasks in your list:",
+          "Jesse, here's what we've got on the board:",
           "1. [D][ ] submit CS2103 tutorial (by: Aug 30 2026)",
           "2. [D][ ] christmas (by: Dec 25 2026)",
           "3. [D][ ] january (by: Jan 5 2027)",
@@ -385,7 +385,7 @@ Expected responses omit the surrounding separator lines.
         ["Date is required for the on command."],
         ["Unknown command."],
         [
-          "Here are the tasks in your list:",
+          "Jesse, here's what we've got on the board:",
           "1. [D][ ] submit CS2103 (by: Aug 30 2026)",
           "2. [D][ ] MA2116 homework (by: Aug 31 2026)",
           "3. [D][X] project report (by: Aug 30 2026)",
@@ -440,7 +440,7 @@ Expected responses omit the surrounding separator lines.
           "[T][X] read book"
         ],
         [
-          "Here are the tasks in your list:",
+          "Jesse, here's what we've got on the board:",
           "1. [T][X] read book"
         ],
         ["Walter: Bye. Hope to see you again soon!"]
@@ -480,7 +480,7 @@ Expected responses omit the surrounding separator lines.
         ],
         ["Unknown command."],
         [
-          "Here are the tasks in your list:",
+          "Jesse, here's what we've got on the board:",
           "1. [T][X] read book",
           "2. [D][ ] return book (by: Aug 30 2026)"
         ],
@@ -519,7 +519,7 @@ Expected responses omit the surrounding separator lines.
           "Now you have 3 tasks in the list."
         ],
         [
-          "Here are the tasks in your list:",
+          "Jesse, here's what we've got on the board:",
           "1. [T][ ] read book",
           "2. [D][ ] return book (by: Aug 30 2026)",
           "3. [E][ ] project meeting (at: Mon 2-4pm)"
@@ -534,7 +534,7 @@ Expected responses omit the surrounding separator lines.
           "Now you have 2 tasks in the list."
         ],
         [
-          "Here are the tasks in your list:",
+          "Jesse, here's what we've got on the board:",
           "1. [D][X] return book (by: Aug 30 2026)",
           "2. [E][ ] project meeting (at: Mon 2-4pm)"
         ],
@@ -544,7 +544,7 @@ Expected responses omit the surrounding separator lines.
           "Now you have 1 task in the list."
         ],
         [
-          "Here are the tasks in your list:",
+          "Jesse, here's what we've got on the board:",
           "1. [D][X] return book (by: Aug 30 2026)"
         ],
         ["Walter: Bye. Hope to see you again soon!"]
@@ -587,38 +587,38 @@ Expected responses omit the surrounding separator lines.
       ],
       "expected_outputs": [
         ["Task number is out of range."],
-        ["There are currently no items on your list."],
+        ["Jesse, the board's clean. Nothing to do."],
         [
           "Walter has added this task:",
           "[T][ ] keep me",
           "Now you have 1 task in the list."
         ],
         ["Task number is required."],
-        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Task number is required."],
-        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Task number must be an integer."],
-        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Task number must be an integer."],
-        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Task number must be an integer."],
-        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Task number is out of range."],
-        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Task number is out of range."],
-        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Task number is out of range."],
-        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Task number must be an integer."],
-        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Task number must be an integer."],
-        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Unknown command."],
-        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Unknown command."],
-        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Unknown command."],
-        ["Here are the tasks in your list:", "1. [T][ ] keep me"],
+        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
         ["Walter: Bye. Hope to see you again soon!"]
       ]
     }
