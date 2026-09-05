@@ -42,7 +42,20 @@ public class WalterTest {
     public void getResponse_invalidCommand_errorReturned() {
         Walter walter = createWalter();
 
-        assertEquals("Unknown command.", walter.getResponse("archive book"));
+        assertEquals("Jesse, stop giving me unknown commands.",
+                walter.getResponse("archive book"));
+    }
+
+    @Test
+    public void getResponse_knownErrorTypes_themedMessagesRemainDistinct() {
+        Walter walter = createWalter();
+
+        assertEquals("Jesse, I need a task. Give me something to work with.",
+                walter.getResponse("todo"));
+        assertEquals("Jesse, that task doesn't exist.", walter.getResponse("mark 1"));
+        assertEquals("Jesse, that date makes no sense.",
+                walter.getResponse("deadline report /by tomorrow"));
+        assertEquals("Keyword is required for the find command.", walter.getResponse("find"));
     }
 
     @Test
@@ -76,7 +89,8 @@ public class WalterTest {
         Walter walter = createWalter();
         walter.getResponse("todo read book");
 
-        assertEquals("Unknown command.", walter.getResponse("archive book"));
+        assertEquals("Jesse, stop giving me unknown commands.",
+                walter.getResponse("archive book"));
         assertEquals(CommandCategory.ERROR, walter.getLastCommandCategory());
     }
 

@@ -34,13 +34,13 @@
             <children>
                 <TextField fx:id="userInput"
                            onAction="#handleUserInput"
-                           promptText="Enter a command…"
+                           promptText="Jesse, what are we cooking today?"
                            AnchorPane.bottomAnchor="12.0"
                            AnchorPane.leftAnchor="12.0"
-                           AnchorPane.rightAnchor="100.0"
+                           AnchorPane.rightAnchor="108.0"
                            AnchorPane.topAnchor="12.0" />
                 <Button fx:id="sendButton" defaultButton="true"
-                        onAction="#handleUserInput" prefWidth="78.0" text="Send"
+                        onAction="#handleUserInput" prefWidth="86.0" text="Send"
                         AnchorPane.bottomAnchor="12.0"
                         AnchorPane.rightAnchor="12.0"
                         AnchorPane.topAnchor="12.0" />

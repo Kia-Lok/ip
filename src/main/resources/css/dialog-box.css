@@ -1,7 +1,7 @@
 .dialog-bubble {
-    -fx-background-color: walter-primary-color;
+    -fx-background-color: walter-user-bubble-color;
     -fx-background-radius: 16px 16px 4px 16px;
-    -fx-border-color: walter-primary-color;
+    -fx-border-color: derive(walter-primary-color, 0.12);
     -fx-border-radius: 16px 16px 4px 16px;
     -fx-border-width: 1px;
     -fx-padding: 10px 14px;
@@ -9,7 +9,7 @@
 }
 
 .avatar {
-    -fx-effect: dropshadow(gaussian, rgba(37, 50, 74, 0.18), 4, 0.2, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(25, 31, 24, 0.24), 6, 0.18, 0, 2);
 }
 
 .reply-label {
