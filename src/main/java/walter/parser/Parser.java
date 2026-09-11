@@ -41,6 +41,9 @@ public class Parser {
      * @throws DukeException If the input is blank, unknown, or has invalid command syntax.
      */
     public static Command parse(String input) throws DukeException {
+        if (input == null) {
+            throw new DukeException("Command cannot be null.");
+        }
         String command = normalize(input);
         String commandWord = getCommandWord(command);
         if (commandWord.equals("list") && isExactCommand(command, "list")) {
@@ -160,6 +163,10 @@ public class Parser {
         if (delimiterIndex < 0) {
             throw new DukeException("Deadline requires /by.");
         }
+        if (findDelimiter(taskDetails, DEADLINE_DELIMITER,
+                delimiterIndex + DEADLINE_DELIMITER.length()) >= 0) {
+            throw new DukeException("Deadline requires exactly one /by.");
+        }
 
         String description = taskDetails.substring(0, delimiterIndex).strip();
         String byText = taskDetails.substring(
@@ -189,6 +196,13 @@ public class Parser {
 
         int atDelimiterIndex = findDelimiter(taskDetails, EVENT_AT_DELIMITER, 0);
         if (atDelimiterIndex >= 0) {
+            if (findDelimiter(taskDetails, EVENT_AT_DELIMITER,
+                    atDelimiterIndex + EVENT_AT_DELIMITER.length()) >= 0
+                    || findDelimiter(taskDetails, EVENT_FROM_DELIMITER, 0) >= 0
+                    || findDelimiter(taskDetails, EVENT_TO_DELIMITER, 0) >= 0) {
+                throw new DukeException(
+                        "Event must use either one /at or one /from and one /to.");
+            }
             return parseAtEvent(taskDetails, atDelimiterIndex);
         }
         return parseFromToEvent(taskDetails);
@@ -231,12 +245,24 @@ public class Parser {
             }
             throw new DukeException("Event requires /at or /from and /to.");
         }
+        if (findDelimiter(taskDetails, EVENT_FROM_DELIMITER,
+                fromDelimiterIndex + EVENT_FROM_DELIMITER.length()) >= 0) {
+            throw new DukeException("Event requires exactly one /from and one /to.");
+        }
+        int firstToDelimiterIndex = findDelimiter(taskDetails, EVENT_TO_DELIMITER, 0);
+        if (firstToDelimiterIndex >= 0 && firstToDelimiterIndex < fromDelimiterIndex) {
+            throw new DukeException("Event /from must appear before /to.");
+        }
         int toDelimiterIndex = findDelimiter(
                 taskDetails,
                 EVENT_TO_DELIMITER,
                 fromDelimiterIndex + EVENT_FROM_DELIMITER.length());
         if (toDelimiterIndex < 0) {
             throw new DukeException("Event requires /to command when given /from command.");
+        }
+        if (findDelimiter(taskDetails, EVENT_TO_DELIMITER,
+                toDelimiterIndex + EVENT_TO_DELIMITER.length()) >= 0) {
+            throw new DukeException("Event requires exactly one /from and one /to.");
         }
 
         String description = taskDetails.substring(0, fromDelimiterIndex).strip();
@@ -310,7 +336,7 @@ public class Parser {
         try {
             taskNumber = Integer.parseInt(taskNumberText);
         } catch (NumberFormatException exception) {
-            throw new DukeException("Task number must be an integer.");
+            throw new DukeException("Task number must be an integer.", exception);
         }
         return taskNumber - 1;
     }
@@ -330,7 +356,7 @@ public class Parser {
         try {
             return Integer.parseInt(placeNumberText) - 1;
         } catch (NumberFormatException exception) {
-            throw new DukeException("Place number must be an integer.");
+            throw new DukeException("Place number must be an integer.", exception);
         }
     }
 
@@ -349,7 +375,7 @@ public class Parser {
         try {
             return LocalDate.parse(dateText);
         } catch (DateTimeParseException exception) {
-            throw new DukeException("Date must be in yyyy-MM-dd format.");
+            throw new DukeException("Date must be in yyyy-MM-dd format.", exception);
         }
     }
 
@@ -386,7 +412,7 @@ public class Parser {
         try {
             return LocalDate.parse(dateText);
         } catch (DateTimeParseException exception) {
-            throw new DukeException("Deadline date must be in yyyy-MM-dd format.");
+            throw new DukeException("Deadline date must be in yyyy-MM-dd format.", exception);
         }
     }
 

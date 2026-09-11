@@ -1,5 +1,6 @@
 package walter.parser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -53,6 +54,15 @@ public class ParserTest {
     }
 
     @Test
+    public void parse_duplicateDeadlineDelimiter_specificExceptionThrown() {
+        String input = "deadline report /by 2026-08-30 /by 2026-09-01";
+
+        DukeException exception = assertThrows(DukeException.class, () -> Parser.parse(input));
+
+        assertEquals("Deadline requires exactly one /by.", exception.getMessage());
+    }
+
+    @Test
     public void parse_validAtEvent_addCommandReturned() throws DukeException {
         assertInstanceOf(AddCommand.class, Parser.parse("event meeting /at 3pm"));
     }
@@ -70,6 +80,27 @@ public class ParserTest {
         assertThrows(DukeException.class, () -> Parser.parse("event meeting /from 2pm"));
         assertThrows(DukeException.class, () -> Parser.parse("event meeting /to 4pm"));
         assertThrows(DukeException.class, () -> Parser.parse("event meeting /at"));
+    }
+
+    @Test
+    public void parse_conflictingOrRepeatedEventDelimiters_specificExceptionThrown() {
+        String mixedFormat = "event meeting /at 2pm /from 2pm /to 4pm";
+        String repeatedDelimiter = "event meeting /from 2pm /to 4pm /to 5pm";
+        String reversedDelimiters = "event meeting /to 4pm /from 2pm";
+
+        DukeException mixedFormatException = assertThrows(
+                DukeException.class, () -> Parser.parse(mixedFormat));
+        DukeException repeatedDelimiterException = assertThrows(
+                DukeException.class, () -> Parser.parse(repeatedDelimiter));
+        DukeException reversedDelimiterException = assertThrows(
+                DukeException.class, () -> Parser.parse(reversedDelimiters));
+
+        assertEquals("Event must use either one /at or one /from and one /to.",
+                mixedFormatException.getMessage());
+        assertEquals("Event requires exactly one /from and one /to.",
+                repeatedDelimiterException.getMessage());
+        assertEquals("Event /from must appear before /to.",
+                reversedDelimiterException.getMessage());
     }
 
     @Test
@@ -171,6 +202,13 @@ public class ParserTest {
     public void parse_blankInput_exceptionThrown() {
         assertThrows(DukeException.class, () -> Parser.parse(""));
         assertThrows(DukeException.class, () -> Parser.parse("   "));
+    }
+
+    @Test
+    public void parse_nullInput_applicationExceptionThrown() {
+        DukeException exception = assertThrows(DukeException.class, () -> Parser.parse(null));
+
+        assertEquals("Command cannot be null.", exception.getMessage());
     }
 
     @Test

@@ -1,7 +1,6 @@
 package walter;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
@@ -52,10 +51,7 @@ public class Walter {
             tasks = new TaskList(storage.load());
         } catch (DukeException exception) {
             tasks = new TaskList();
-            loadWarning = "Walter could not load saved tasks. Starting with an empty list.";
-        } catch (IOException exception) {
-            tasks = new TaskList();
-            loadWarning = "Walter could not access saved tasks. Starting with an empty list.";
+            loadWarning = exception.getMessage() + " Starting with an empty list.";
         }
     }
 

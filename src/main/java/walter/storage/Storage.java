@@ -60,19 +60,23 @@ public class Storage {
      * Loads every persisted task, or returns an empty list when no save file exists.
      *
      * @return Tasks reconstructed from the save file in their stored order.
-     * @throws IOException If the save file exists but cannot be read.
-     * @throws DukeException If any stored task record is malformed or unsupported.
+     * @throws DukeException If the save file cannot be read or any stored task record is
+     *         malformed or unsupported.
      */
-    public List<Task> load() throws IOException, DukeException {
+    public List<Task> load() throws DukeException {
         if (!Files.exists(saveFile)) {
             return new ArrayList<>();
         }
 
-        List<Task> tasks = new ArrayList<>();
-        for (String line : Files.readAllLines(saveFile, StandardCharsets.UTF_8)) {
-            tasks.add(parseStoredTask(line));
+        try {
+            List<Task> tasks = new ArrayList<>();
+            for (String line : Files.readAllLines(saveFile, StandardCharsets.UTF_8)) {
+                tasks.add(parseStoredTask(line));
+            }
+            return tasks;
+        } catch (IOException exception) {
+            throw new DukeException("Walter could not load saved tasks.", exception);
         }
-        return tasks;
     }
 
     /**
@@ -94,7 +98,7 @@ public class Storage {
             }
             Files.write(saveFile, lines, StandardCharsets.UTF_8);
         } catch (IOException exception) {
-            throw new DukeException("Walter could not save your tasks.");
+            throw new DukeException("Walter could not save your tasks.", exception);
         }
     }
 
@@ -116,7 +120,7 @@ public class Storage {
             }
             return places;
         } catch (IOException exception) {
-            throw new DukeException("Walter could not load saved places.");
+            throw new DukeException("Walter could not load saved places.", exception);
         }
     }
 
@@ -143,7 +147,7 @@ public class Storage {
             }
             Files.write(placeFile, lines, StandardCharsets.UTF_8);
         } catch (IOException exception) {
-            throw new DukeException("Walter could not save your places.");
+            throw new DukeException("Walter could not save your places.", exception);
         }
     }
 
@@ -251,7 +255,7 @@ public class Storage {
         try {
             return LocalDate.parse(dateText);
         } catch (DateTimeParseException exception) {
-            throw new DukeException("Malformed saved deadline date.");
+            throw new DukeException("Malformed saved deadline date.", exception);
         }
     }
 

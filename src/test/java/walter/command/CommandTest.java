@@ -3,9 +3,13 @@ package walter.command;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
@@ -72,6 +76,29 @@ public class CommandTest {
     }
 
     @Test
+    public void execute_mutatingCommandsWhenSaveFails_stateAndOutputRemainUnchanged()
+            throws DukeException {
+        Task first = new Todo("first");
+        Task second = new Todo("second");
+        TaskList tasks = new TaskList(List.of(first, second));
+        FailingStorage storage = new FailingStorage(temporaryDirectory.resolve("walter.txt"));
+        ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
+        Ui ui = new Ui(new PrintStream(outputBytes, true, StandardCharsets.UTF_8));
+        AddCommand addCommand = new AddCommand(new Todo("third"));
+
+        assertThrows(DukeException.class, () -> addCommand.execute(tasks, ui, storage));
+        assertThrows(DukeException.class, () -> new DeleteCommand(0).execute(tasks, ui, storage));
+        assertThrows(DukeException.class, () -> new MarkCommand(0).execute(tasks, ui, storage));
+        second.markAsDone();
+        assertThrows(DukeException.class, () -> new UnmarkCommand(1).execute(tasks, ui, storage));
+
+        assertEquals(List.of(first, second), tasks.getTasks());
+        assertFalse(first.isDone());
+        assertTrue(second.isDone());
+        assertEquals("", outputBytes.toString(StandardCharsets.UTF_8));
+    }
+
+    @Test
     public void execute_onCommand_taskStateUnchangedAndStorageNotSaved() throws DukeException {
         LocalDate date = LocalDate.of(2026, 8, 30);
         Deadline deadline = new Deadline("submit report", date);
@@ -127,6 +154,20 @@ public class CommandTest {
 
         int getSaveCount() {
             return saveCount;
+        }
+    }
+
+    /**
+     * Simulates a persistence failure without relying on platform-specific file permissions.
+     */
+    private static class FailingStorage extends Storage {
+        FailingStorage(Path saveFile) {
+            super(saveFile);
+        }
+
+        @Override
+        public void save(List<Task> tasks) throws DukeException {
+            throw new DukeException("Walter could not save your tasks.");
         }
     }
 }

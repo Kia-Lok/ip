@@ -64,6 +64,19 @@ public class TaskList {
     }
 
     /**
+     * Restores a task removed by a command whose persistence step failed.
+     *
+     * @param taskIndex Original zero-based position of the task.
+     * @param task Task to restore.
+     */
+    public void restoreDeletedTask(int taskIndex, Task task) {
+        assert taskIndex >= 0 && taskIndex <= tasks.size()
+                : "A deleted task should be restored at its original index";
+        assert task != null : "A restored task should not be null";
+        tasks.add(taskIndex, task);
+    }
+
+    /**
      * Marks and returns the task at a validated zero-based index.
      *
      * @param taskIndex Zero-based index of the task to mark as done.

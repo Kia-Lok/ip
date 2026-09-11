@@ -223,6 +223,7 @@ Expected responses omit the surrounding separator lines.
         "deadline /by Sunday",
         "deadline return book /by",
         "deadline report /bypass Sunday",
+        "deadline report /by 2026-08-30 /by 2026-09-01",
         "event",
         "event meeting",
         "event /at Monday",
@@ -233,6 +234,9 @@ Expected responses omit the surrounding separator lines.
         "event /from Monday /to 4pm",
         "event meeting /from /to 4pm",
         "event meeting /from Monday /to",
+        "event meeting /at 2pm /from 2pm /to 4pm",
+        "event meeting /from 2pm /to 4pm /to 5pm",
+        "event meeting /to 4pm /from 2pm",
         "list",
         "bye"
       ],
@@ -244,6 +248,7 @@ Expected responses omit the surrounding separator lines.
         ["Precision matters, Jesse. Deadline description cannot be empty."],
         ["Precision matters, Jesse. Deadline date/time cannot be empty."],
         ["Precision matters, Jesse. Deadline requires /by."],
+        ["Precision matters, Jesse. Deadline requires exactly one /by."],
         ["Precision matters, Jesse. Event description cannot be empty."],
         ["Precision matters, Jesse. Event requires /at or /from and /to."],
         ["Precision matters, Jesse. Event description cannot be empty."],
@@ -254,6 +259,9 @@ Expected responses omit the surrounding separator lines.
         ["Precision matters, Jesse. Event description cannot be empty."],
         ["Precision matters, Jesse. Event start cannot be empty."],
         ["Precision matters, Jesse. Event end cannot be empty."],
+        ["Precision matters, Jesse. Event must use either one /at or one /from and one /to."],
+        ["Precision matters, Jesse. Event requires exactly one /from and one /to."],
+        ["Precision matters, Jesse. Event /from must appear before /to."],
         ["The board is clean. Nothing needs doing."],
         ["All right. The operation is closed. Stay focused, Jesse."]
       ]

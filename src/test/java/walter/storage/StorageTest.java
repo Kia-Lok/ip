@@ -38,6 +38,17 @@ public class StorageTest {
     }
 
     @Test
+    public void load_unreadablePath_applicationExceptionRetainsCause() throws IOException {
+        Path saveFile = temporaryDirectory.resolve("data").resolve("walter.txt");
+        Files.createDirectories(saveFile);
+
+        DukeException exception = assertThrows(DukeException.class, () -> createStorage().load());
+
+        assertEquals("Walter could not load saved tasks.", exception.getMessage());
+        assertInstanceOf(IOException.class, exception.getCause());
+    }
+
+    @Test
     public void saveLoad_todo_roundTripPreserved() throws IOException, DukeException {
         Storage storage = createStorage();
         storage.save(List.of(new Todo("read book")));
