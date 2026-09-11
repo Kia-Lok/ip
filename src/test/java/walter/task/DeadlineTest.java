@@ -12,8 +12,10 @@ import org.junit.jupiter.api.Test;
 public class DeadlineTest {
     @Test
     public void toString_deadline_friendlyDateFormattingIncluded() {
-        Deadline deadline = new Deadline("submit report", LocalDate.of(2026, 8, 30));
+        LocalDate date = LocalDate.of(2026, 8, 30);
+        Deadline deadline = new Deadline("submit report", date);
 
+        assertEquals(date, deadline.getBy());
         assertEquals("[D][ ] submit report (by: Aug 30 2026)", deadline.toString());
     }
 }

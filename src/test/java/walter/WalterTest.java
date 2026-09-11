@@ -3,6 +3,9 @@ package walter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
@@ -113,6 +116,18 @@ public class WalterTest {
         Walter secondWalter = new Walter(storage);
 
         assertTrue(secondWalter.getResponse("list").contains("submit report (by: Sep 4 2026)"));
+    }
+
+    @Test
+    public void constructor_corruptedTaskFile_warningShownAndEmptyListUsed() throws IOException {
+        Path saveFile = temporaryDirectory.resolve("walter.txt");
+        Files.writeString(saveFile, "corrupted record", StandardCharsets.UTF_8);
+
+        Walter walter = new Walter(new Storage(saveFile));
+
+        assertTrue(walter.getWelcomeMessage().contains(
+                "Malformed saved task record. Starting with an empty list."));
+        assertEquals("The board is clean. Nothing needs doing.", walter.getResponse("list"));
     }
 
     @Test

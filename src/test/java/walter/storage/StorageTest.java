@@ -152,6 +152,24 @@ public class StorageTest {
     }
 
     @Test
+    public void load_unknownTaskType_exceptionThrown() throws IOException {
+        writeSaveFile("X\t0\tread book");
+
+        DukeException exception = assertThrows(DukeException.class, () -> createStorage().load());
+
+        assertEquals("Unknown saved task record.", exception.getMessage());
+    }
+
+    @Test
+    public void load_emptyRequiredTaskText_exceptionThrown() throws IOException {
+        writeSaveFile("T\t0\t");
+
+        DukeException exception = assertThrows(DukeException.class, () -> createStorage().load());
+
+        assertEquals("Saved task text cannot be empty.", exception.getMessage());
+    }
+
+    @Test
     public void load_malformedCompletionStatus_exceptionThrown() throws IOException {
         writeSaveFile("T\t2\tread book");
 
@@ -195,6 +213,39 @@ public class StorageTest {
         Files.writeString(placeFile, "P\\tmissing-address", StandardCharsets.UTF_8);
 
         assertThrows(DukeException.class, () -> createStorage().loadPlaces());
+    }
+
+    @Test
+    public void loadPlaces_emptyOrMalformedEscapedText_exceptionThrown() throws IOException {
+        Path placeFile = temporaryDirectory.resolve("data").resolve("places.txt");
+        Files.createDirectories(placeFile.getParent());
+        Files.writeString(placeFile, "P\t\taddress", StandardCharsets.UTF_8);
+        assertThrows(DukeException.class, () -> createStorage().loadPlaces());
+
+        Files.writeString(placeFile, "P\tname\tbad\\q", StandardCharsets.UTF_8);
+        assertThrows(DukeException.class, () -> createStorage().loadPlaces());
+    }
+
+    @Test
+    public void save_taskAndPlacePathsAreDirectories_applicationExceptionsThrown()
+            throws IOException {
+        Path taskPath = temporaryDirectory.resolve("tasks");
+        Path placePath = temporaryDirectory.resolve("places");
+        Files.createDirectories(taskPath);
+        Files.createDirectories(placePath);
+        Storage storage = new Storage(taskPath, placePath);
+        List<Task> tasks = List.of(new Todo("read book"));
+        List<Place> places = List.of(new Place("home", "Clementi"));
+
+        DukeException taskException = assertThrows(
+                DukeException.class, () -> storage.save(tasks));
+        DukeException placeException = assertThrows(
+                DukeException.class, () -> storage.savePlaces(places));
+
+        assertEquals("Walter could not save your tasks.", taskException.getMessage());
+        assertInstanceOf(IOException.class, taskException.getCause());
+        assertEquals("Walter could not save your places.", placeException.getMessage());
+        assertInstanceOf(IOException.class, placeException.getCause());
     }
 
     /**

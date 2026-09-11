@@ -29,6 +29,13 @@ public class ParserTest {
     }
 
     @Test
+    public void parse_commandWithMixedWhitespace_commandAndArgumentRecognised() throws DukeException {
+        assertInstanceOf(AddCommand.class, Parser.parse("\t todo\tread book   "));
+        assertInstanceOf(MarkCommand.class, Parser.parse("\nmark\t1 "));
+        assertInstanceOf(FindCommand.class, Parser.parse("  find\tbook\tclub  "));
+    }
+
+    @Test
     public void parse_emptyTodo_exceptionThrown() {
         assertThrows(DukeException.class, () -> Parser.parse("todo"));
     }
@@ -214,5 +221,12 @@ public class ParserTest {
     @Test
     public void parse_unknownCommand_exceptionThrown() {
         assertThrows(DukeException.class, () -> Parser.parse("archive book"));
+    }
+
+    @Test
+    public void parse_argumentSuppliedToArgumentlessCommand_unknownCommandExceptionThrown() {
+        assertThrows(DukeException.class, () -> Parser.parse("list now"));
+        assertThrows(DukeException.class, () -> Parser.parse("places now"));
+        assertThrows(DukeException.class, () -> Parser.parse("bye now"));
     }
 }

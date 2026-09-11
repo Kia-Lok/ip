@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import walter.DukeException;
+import walter.place.Place;
 import walter.storage.Storage;
 import walter.task.Deadline;
 import walter.task.Task;
@@ -128,6 +129,58 @@ public class CommandTest {
         assertTrue(matchingTask.isDone());
         assertFalse(otherTask.isDone());
         assertEquals(0, storage.getSaveCount());
+    }
+
+    @Test
+    public void execute_listCommand_tasksDisplayedWithoutSaving() throws DukeException {
+        TaskList tasks = new TaskList(List.of(new Todo("read book")));
+        RecordingStorage storage = new RecordingStorage(
+                temporaryDirectory.resolve("walter.txt"));
+        ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
+        Ui ui = new Ui(new PrintStream(outputBytes, true, StandardCharsets.UTF_8));
+
+        new ListCommand().execute(tasks, ui, storage);
+
+        assertEquals("Here is the current operation:\n1. [T][ ] read book\n",
+                outputBytes.toString(StandardCharsets.UTF_8));
+        assertEquals(0, storage.getSaveCount());
+    }
+
+    @Test
+    public void execute_exitCommand_goodbyeDisplayedAndExitSignalled() {
+        ExitCommand command = new ExitCommand();
+        ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
+        Ui ui = new Ui(new PrintStream(outputBytes, true, StandardCharsets.UTF_8));
+
+        command.execute(new TaskList(), ui, createStorage());
+
+        assertTrue(command.isExit());
+        assertEquals("All right. The operation is closed. Stay focused, Jesse.\n",
+                outputBytes.toString(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    public void execute_placeCommands_addListAndDeletePersistedPlaces() throws DukeException {
+        Storage storage = createStorage();
+        TaskList tasks = new TaskList();
+        ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
+        Ui ui = new Ui(new PrintStream(outputBytes, true, StandardCharsets.UTF_8));
+        Place place = new Place("NUS Library", "12 Computing Drive");
+
+        new AddPlaceCommand(place).execute(tasks, ui, storage);
+        new ListPlacesCommand().execute(tasks, ui, storage);
+        new DeletePlaceCommand(0).execute(tasks, ui, storage);
+
+        assertTrue(storage.loadPlaces().isEmpty());
+        assertEquals("Good. I've recorded this location:\n"
+                + "NUS Library — 12 Computing Drive\n"
+                + "The location list now contains 1 place.\n"
+                + "Here are the recorded locations:\n"
+                + "1. NUS Library — 12 Computing Drive\n"
+                + "Done. I've removed this location:\n"
+                + "NUS Library — 12 Computing Drive\n"
+                + "The location list now contains 0 places.\n",
+                outputBytes.toString(StandardCharsets.UTF_8));
     }
 
     /**
