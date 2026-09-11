@@ -3,6 +3,7 @@ package walter.gui;
 import java.io.IOException;
 import java.util.Collections;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,6 +20,9 @@ import walter.command.CommandCategory;
  * Reusable FXML-backed message bubble for one side of a Walter conversation.
  */
 public class DialogBox extends HBox {
+    private static final double MAX_BUBBLE_WIDTH_RATIO = 0.72;
+    private static final double MAX_READABLE_BUBBLE_WIDTH = 620.0;
+
     @FXML
     private Label dialog;
     @FXML
@@ -40,6 +44,9 @@ public class DialogBox extends HBox {
             throw new IllegalStateException("Walter could not load a dialog box.", exception);
         }
         dialog.setText(text);
+        dialog.maxWidthProperty().bind(Bindings.min(
+                widthProperty().multiply(MAX_BUBBLE_WIDTH_RATIO),
+                MAX_READABLE_BUBBLE_WIDTH));
         displayPicture.setImage(image);
     }
 

@@ -33,5 +33,9 @@
 }
 
 .error-label {
+    -fx-background-color: rgba(248, 231, 226, 0.96);
     -fx-border-color: walter-error-accent-color;
+    -fx-border-width: 1px 1px 1px 4px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #652f34;
 }
