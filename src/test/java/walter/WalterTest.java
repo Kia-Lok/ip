@@ -33,7 +33,7 @@ public class WalterTest {
         Walter walter = createWalter();
 
         assertTrue(walter.getResponse("todo read book").contains("[T][ ] read book"));
-        assertEquals("Jesse, here's what we've got on the board:\n1. [T][ ] read book",
+        assertEquals("Here is the current operation:\n1. [T][ ] read book",
                 walter.getResponse("list"));
         assertTrue(walter.getResponse("mark 1").contains("[T][X] read book"));
     }
@@ -42,20 +42,22 @@ public class WalterTest {
     public void getResponse_invalidCommand_errorReturned() {
         Walter walter = createWalter();
 
-        assertEquals("Jesse, stop giving me unknown commands.",
+        assertEquals("Precision matters, Jesse. Unknown command.",
                 walter.getResponse("archive book"));
     }
 
     @Test
-    public void getResponse_knownErrorTypes_themedMessagesRemainDistinct() {
+    public void getResponse_knownErrorTypes_personalityPreservesSpecificDiagnostics() {
         Walter walter = createWalter();
 
-        assertEquals("Jesse, I need a task. Give me something to work with.",
+        assertEquals("Precision matters, Jesse. Todo description cannot be empty.",
                 walter.getResponse("todo"));
-        assertEquals("Jesse, that task doesn't exist.", walter.getResponse("mark 1"));
-        assertEquals("Jesse, that date makes no sense.",
+        assertEquals("Precision matters, Jesse. Task number is out of range.",
+                walter.getResponse("mark 1"));
+        assertEquals("Precision matters, Jesse. Deadline date must be in yyyy-MM-dd format.",
                 walter.getResponse("deadline report /by tomorrow"));
-        assertEquals("Keyword is required for the find command.", walter.getResponse("find"));
+        assertEquals("Precision matters, Jesse. Keyword is required for the find command.",
+                walter.getResponse("find"));
     }
 
     @Test
@@ -89,7 +91,7 @@ public class WalterTest {
         Walter walter = createWalter();
         walter.getResponse("todo read book");
 
-        assertEquals("Jesse, stop giving me unknown commands.",
+        assertEquals("Precision matters, Jesse. Unknown command.",
                 walter.getResponse("archive book"));
         assertEquals(CommandCategory.ERROR, walter.getLastCommandCategory());
     }
@@ -98,7 +100,8 @@ public class WalterTest {
     public void getResponse_byeCommand_farewellReturnedWithoutCliSeparator() {
         Walter walter = createWalter();
 
-        assertEquals("Walter: Bye. Hope to see you again soon!", walter.getResponse("bye"));
+        assertEquals("All right. The operation is closed. Stay focused, Jesse.",
+                walter.getResponse("bye"));
     }
 
     @Test
@@ -120,18 +123,18 @@ public class WalterTest {
         assertTrue(firstWalter.getResponse("place Alex's home /at 123 Clementi Ave 3")
                 .contains("Alex's home — 123 Clementi Ave 3"));
         assertTrue(firstWalter.getResponse("place NUS Library /at 12 Computing Drive")
-                .contains("Now you have 2 saved places."));
-        assertEquals("Jesse, here are the places we've saved:\n"
+                .contains("The location list now contains 2 places."));
+        assertEquals("Here are the recorded locations:\n"
                 + "1. Alex's home — 123 Clementi Ave 3\n"
                 + "2. NUS Library — 12 Computing Drive", firstWalter.getResponse("places"));
 
         assertTrue(firstWalter.getResponse("deleteplace 1")
                 .contains("Alex's home — 123 Clementi Ave 3"));
-        assertEquals("Jesse, here are the places we've saved:\n"
+        assertEquals("Here are the recorded locations:\n"
                 + "1. NUS Library — 12 Computing Drive", firstWalter.getResponse("places"));
 
         Walter restartedWalter = new Walter(storage);
-        assertEquals("Jesse, here are the places we've saved:\n"
+        assertEquals("Here are the recorded locations:\n"
                 + "1. NUS Library — 12 Computing Drive", restartedWalter.getResponse("places"));
     }
 
@@ -139,18 +142,19 @@ public class WalterTest {
     public void getResponse_invalidPlaceCommands_errorsReturnedWithoutChangingPlaces() {
         Walter walter = createWalter();
 
-        assertEquals("Place name cannot be empty.", walter.getResponse("place"));
-        assertEquals("Place requires exactly one /at.",
+        assertEquals("Precision matters, Jesse. Place name cannot be empty.",
+                walter.getResponse("place"));
+        assertEquals("Precision matters, Jesse. Place requires exactly one /at.",
                 walter.getResponse("place Alex's home"));
-        assertEquals("Place name cannot be empty.",
+        assertEquals("Precision matters, Jesse. Place name cannot be empty.",
                 walter.getResponse("place /at 123 Clementi Ave 3"));
-        assertEquals("Place address cannot be empty.",
+        assertEquals("Precision matters, Jesse. Place address cannot be empty.",
                 walter.getResponse("place Alex's home /at"));
-        assertEquals("Place number must be an integer.",
+        assertEquals("Precision matters, Jesse. Place number must be an integer.",
                 walter.getResponse("deleteplace abc"));
-        assertEquals("Place number is out of range.",
+        assertEquals("Precision matters, Jesse. Place number is out of range.",
                 walter.getResponse("deleteplace 999"));
-        assertEquals("Jesse, we don't have any places saved yet.",
+        assertEquals("The location list is empty.",
                 walter.getResponse("places"));
     }
 

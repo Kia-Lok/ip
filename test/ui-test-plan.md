@@ -27,32 +27,32 @@ Expected responses omit the surrounding separator lines.
       ],
       "expected_outputs": [
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[T][ ] Read Book",
-          "Now you have 1 task in the list."
+          "The list now contains 1 task."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[D][ ] return book (by: Aug 30 2026)",
-          "Now you have 2 tasks in the list."
+          "The list now contains 2 tasks."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[T][ ] buy milk",
-          "Now you have 3 tasks in the list."
+          "The list now contains 3 tasks."
         ],
         [
-          "Here are the matching tasks in your list:",
+          "Here's what I found:",
           "1. [T][ ] Read Book",
           "2. [D][ ] return book (by: Aug 30 2026)"
         ],
         [
-          "Here are the matching tasks in your list:",
+          "Here's what I found:",
           "1. [T][ ] buy milk"
         ],
-        ["There are no tasks matching that keyword."],
-        ["Keyword is required for the find command."],
-        ["Walter: Bye. Hope to see you again soon!"]
+        ["I found no tasks matching that keyword."],
+        ["Precision matters, Jesse. Keyword is required for the find command."],
+        ["All right. The operation is closed. Stay focused, Jesse."]
       ]
     },
     {
@@ -71,47 +71,47 @@ Expected responses omit the surrounding separator lines.
       ],
       "expected_outputs": [
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[T][ ] read book",
-          "Now you have 1 task in the list."
+          "The list now contains 1 task."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[T][ ] return book",
-          "Now you have 2 tasks in the list."
+          "The list now contains 2 tasks."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[T][ ] buy bread",
-          "Now you have 3 tasks in the list."
+          "The list now contains 3 tasks."
         ],
         [
-          "Jesse, here's what we've got on the board:",
+          "Here is the current operation:",
           "1. [T][ ] read book",
           "2. [T][ ] return book",
           "3. [T][ ] buy bread"
         ],
         [
-          "Walter has marked this task as done:",
+          "Done. Consider this one handled:",
           "[T][X] return book"
         ],
         [
-          "Jesse, here's what we've got on the board:",
+          "Here is the current operation:",
           "1. [T][ ] read book",
           "2. [T][X] return book",
           "3. [T][ ] buy bread"
         ],
         [
-          "Walter has marked this task as not done yet:",
+          "Understood. This goes back into the mix:",
           "[T][ ] return book"
         ],
         [
-          "Jesse, here's what we've got on the board:",
+          "Here is the current operation:",
           "1. [T][ ] read book",
           "2. [T][ ] return book",
           "3. [T][ ] buy bread"
         ],
-        ["Walter: Bye. Hope to see you again soon!"]
+        ["All right. The operation is closed. Stay focused, Jesse."]
       ]
     },
     {
@@ -128,37 +128,37 @@ Expected responses omit the surrounding separator lines.
       ],
       "expected_outputs": [
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[T][ ] borrow book",
-          "Now you have 1 task in the list."
+          "The list now contains 1 task."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[D][ ] return book (by: Aug 30 2026)",
-          "Now you have 2 tasks in the list."
+          "The list now contains 2 tasks."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[E][ ] project meeting (at: Mon 2-4pm)",
-          "Now you have 3 tasks in the list."
+          "The list now contains 3 tasks."
         ],
         [
-          "Jesse, here's what we've got on the board:",
+          "Here is the current operation:",
           "1. [T][ ] borrow book",
           "2. [D][ ] return book (by: Aug 30 2026)",
           "3. [E][ ] project meeting (at: Mon 2-4pm)"
         ],
         [
-          "Walter has marked this task as done:",
+          "Done. Consider this one handled:",
           "[D][X] return book (by: Aug 30 2026)"
         ],
         [
-          "Jesse, here's what we've got on the board:",
+          "Here is the current operation:",
           "1. [T][ ] borrow book",
           "2. [D][X] return book (by: Aug 30 2026)",
           "3. [E][ ] project meeting (at: Mon 2-4pm)"
         ],
-        ["Walter: Bye. Hope to see you again soon!"]
+        ["All right. The operation is closed. Stay focused, Jesse."]
       ]
     },
     {
@@ -171,15 +171,15 @@ Expected responses omit the surrounding separator lines.
       ],
       "expected_outputs": [
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[E][ ] project meeting (from: Mon 2pm to: 4pm)",
-          "Now you have 1 task in the list."
+          "The list now contains 1 task."
         ],
         [
-          "Jesse, here's what we've got on the board:",
+          "Here is the current operation:",
           "1. [E][ ] project meeting (from: Mon 2pm to: 4pm)"
         ],
-        ["Walter: Bye. Hope to see you again soon!"]
+        ["All right. The operation is closed. Stay focused, Jesse."]
       ]
     },
     {
@@ -199,17 +199,17 @@ Expected responses omit the surrounding separator lines.
         "bye"
       ],
       "expected_outputs": [
-        ["Command cannot be blank."],
-        ["Command cannot be blank."],
-        ["Unknown command."],
-        ["Unknown command."],
-        ["Unknown command."],
-        ["Unknown command."],
-        ["Unknown command."],
-        ["Unknown command."],
-        ["Unknown command."],
-        ["Jesse, the board's clean. Nothing to do."],
-        ["Walter: Bye. Hope to see you again soon!"]
+        ["Precision matters, Jesse. Command cannot be blank."],
+        ["Precision matters, Jesse. Command cannot be blank."],
+        ["Precision matters, Jesse. Unknown command."],
+        ["Precision matters, Jesse. Unknown command."],
+        ["Precision matters, Jesse. Unknown command."],
+        ["Precision matters, Jesse. Unknown command."],
+        ["Precision matters, Jesse. Unknown command."],
+        ["Precision matters, Jesse. Unknown command."],
+        ["Precision matters, Jesse. Unknown command."],
+        ["The board is clean. Nothing needs doing."],
+        ["All right. The operation is closed. Stay focused, Jesse."]
       ]
     },
     {
@@ -237,25 +237,25 @@ Expected responses omit the surrounding separator lines.
         "bye"
       ],
       "expected_outputs": [
-        ["Todo description cannot be empty."],
-        ["Todo description cannot be empty."],
-        ["Deadline description cannot be empty."],
-        ["Deadline requires /by."],
-        ["Deadline description cannot be empty."],
-        ["Deadline date/time cannot be empty."],
-        ["Deadline requires /by."],
-        ["Event description cannot be empty."],
-        ["Event requires /at or /from and /to."],
-        ["Event description cannot be empty."],
-        ["Event date/time cannot be empty."],
-        ["Event requires /at or /from and /to."],
-        ["Event requires /to command when given /from command."],
-        ["Event requires /from command when given /to command."],
-        ["Event description cannot be empty."],
-        ["Event start cannot be empty."],
-        ["Event end cannot be empty."],
-        ["Jesse, the board's clean. Nothing to do."],
-        ["Walter: Bye. Hope to see you again soon!"]
+        ["Precision matters, Jesse. Todo description cannot be empty."],
+        ["Precision matters, Jesse. Todo description cannot be empty."],
+        ["Precision matters, Jesse. Deadline description cannot be empty."],
+        ["Precision matters, Jesse. Deadline requires /by."],
+        ["Precision matters, Jesse. Deadline description cannot be empty."],
+        ["Precision matters, Jesse. Deadline date/time cannot be empty."],
+        ["Precision matters, Jesse. Deadline requires /by."],
+        ["Precision matters, Jesse. Event description cannot be empty."],
+        ["Precision matters, Jesse. Event requires /at or /from and /to."],
+        ["Precision matters, Jesse. Event description cannot be empty."],
+        ["Precision matters, Jesse. Event date/time cannot be empty."],
+        ["Precision matters, Jesse. Event requires /at or /from and /to."],
+        ["Precision matters, Jesse. Event requires /to command when given /from command."],
+        ["Precision matters, Jesse. Event requires /from command when given /to command."],
+        ["Precision matters, Jesse. Event description cannot be empty."],
+        ["Precision matters, Jesse. Event start cannot be empty."],
+        ["Precision matters, Jesse. Event end cannot be empty."],
+        ["The board is clean. Nothing needs doing."],
+        ["All right. The operation is closed. Stay focused, Jesse."]
       ]
     },
     {
@@ -279,41 +279,41 @@ Expected responses omit the surrounding separator lines.
       ],
       "expected_outputs": [
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[D][ ] submit CS2103 tutorial (by: Aug 30 2026)",
-          "Now you have 1 task in the list."
+          "The list now contains 1 task."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[D][ ] christmas (by: Dec 25 2026)",
-          "Now you have 2 tasks in the list."
+          "The list now contains 2 tasks."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[D][ ] january (by: Jan 5 2027)",
-          "Now you have 3 tasks in the list."
+          "The list now contains 3 tasks."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[D][ ] leap (by: Feb 29 2028)",
-          "Now you have 4 tasks in the list."
+          "The list now contains 4 tasks."
         ],
-        ["Deadline date must be in yyyy-MM-dd format."],
-        ["Deadline date must be in yyyy-MM-dd format."],
-        ["Deadline date must be in yyyy-MM-dd format."],
-        ["Deadline date must be in yyyy-MM-dd format."],
-        ["Deadline date must be in yyyy-MM-dd format."],
-        ["Deadline date must be in yyyy-MM-dd format."],
-        ["Deadline date must be in yyyy-MM-dd format."],
-        ["Deadline date must be in yyyy-MM-dd format."],
+        ["Precision matters, Jesse. Deadline date must be in yyyy-MM-dd format."],
+        ["Precision matters, Jesse. Deadline date must be in yyyy-MM-dd format."],
+        ["Precision matters, Jesse. Deadline date must be in yyyy-MM-dd format."],
+        ["Precision matters, Jesse. Deadline date must be in yyyy-MM-dd format."],
+        ["Precision matters, Jesse. Deadline date must be in yyyy-MM-dd format."],
+        ["Precision matters, Jesse. Deadline date must be in yyyy-MM-dd format."],
+        ["Precision matters, Jesse. Deadline date must be in yyyy-MM-dd format."],
+        ["Precision matters, Jesse. Deadline date must be in yyyy-MM-dd format."],
         [
-          "Jesse, here's what we've got on the board:",
+          "Here is the current operation:",
           "1. [D][ ] submit CS2103 tutorial (by: Aug 30 2026)",
           "2. [D][ ] christmas (by: Dec 25 2026)",
           "3. [D][ ] january (by: Jan 5 2027)",
           "4. [D][ ] leap (by: Feb 29 2028)"
         ],
-        ["Walter: Bye. Hope to see you again soon!"]
+        ["All right. The operation is closed. Stay focused, Jesse."]
       ]
     },
     {
@@ -342,56 +342,56 @@ Expected responses omit the surrounding separator lines.
       ],
       "expected_outputs": [
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[D][ ] submit CS2103 (by: Aug 30 2026)",
-          "Now you have 1 task in the list."
+          "The list now contains 1 task."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[D][ ] MA2116 homework (by: Aug 31 2026)",
-          "Now you have 2 tasks in the list."
+          "The list now contains 2 tasks."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[D][ ] project report (by: Aug 30 2026)",
-          "Now you have 3 tasks in the list."
+          "The list now contains 3 tasks."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[T][ ] read book",
-          "Now you have 4 tasks in the list."
+          "The list now contains 4 tasks."
         ],
         [
-          "Walter has marked this task as done:",
+          "Done. Consider this one handled:",
           "[D][X] project report (by: Aug 30 2026)"
         ],
         [
-          "Here are the deadlines on Aug 30 2026:",
+          "Here is the schedule for Aug 30 2026:",
           "1. [D][ ] submit CS2103 (by: Aug 30 2026)",
           "2. [D][X] project report (by: Aug 30 2026)"
         ],
         [
-          "Here are the deadlines on Aug 31 2026:",
+          "Here is the schedule for Aug 31 2026:",
           "1. [D][ ] MA2116 homework (by: Aug 31 2026)"
         ],
-        ["There are no deadlines on Dec 31 2026."],
-        ["Date must be in yyyy-MM-dd format."],
-        ["Date must be in yyyy-MM-dd format."],
-        ["Date must be in yyyy-MM-dd format."],
-        ["Date must be in yyyy-MM-dd format."],
-        ["Date must be in yyyy-MM-dd format."],
-        ["Date must be in yyyy-MM-dd format."],
-        ["There are no deadlines on Feb 29 2028."],
-        ["Date is required for the on command."],
-        ["Unknown command."],
+        ["No deadlines are scheduled for Dec 31 2026."],
+        ["Precision matters, Jesse. Date must be in yyyy-MM-dd format."],
+        ["Precision matters, Jesse. Date must be in yyyy-MM-dd format."],
+        ["Precision matters, Jesse. Date must be in yyyy-MM-dd format."],
+        ["Precision matters, Jesse. Date must be in yyyy-MM-dd format."],
+        ["Precision matters, Jesse. Date must be in yyyy-MM-dd format."],
+        ["Precision matters, Jesse. Date must be in yyyy-MM-dd format."],
+        ["No deadlines are scheduled for Feb 29 2028."],
+        ["Precision matters, Jesse. Date is required for the on command."],
+        ["Precision matters, Jesse. Unknown command."],
         [
-          "Jesse, here's what we've got on the board:",
+          "Here is the current operation:",
           "1. [D][ ] submit CS2103 (by: Aug 30 2026)",
           "2. [D][ ] MA2116 homework (by: Aug 31 2026)",
           "3. [D][X] project report (by: Aug 30 2026)",
           "4. [T][ ] read book"
         ],
-        ["Walter: Bye. Hope to see you again soon!"]
+        ["All right. The operation is closed. Stay focused, Jesse."]
       ]
     },
     {
@@ -417,33 +417,33 @@ Expected responses omit the surrounding separator lines.
         "bye"
       ],
       "expected_outputs": [
-        ["Task number is out of range."],
+        ["Precision matters, Jesse. Task number is out of range."],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[T][ ] read book",
-          "Now you have 1 task in the list."
+          "The list now contains 1 task."
         ],
-        ["Task number is required."],
-        ["Task number must be an integer."],
-        ["Task number must be an integer."],
-        ["Task number must be an integer."],
-        ["Task number must be an integer."],
-        ["Task number is out of range."],
-        ["Task number is out of range."],
-        ["Task number is out of range."],
-        ["Task number must be an integer."],
-        ["Task number must be an integer."],
-        ["Task number must be an integer."],
-        ["Task number is out of range."],
+        ["Precision matters, Jesse. Task number is required."],
+        ["Precision matters, Jesse. Task number must be an integer."],
+        ["Precision matters, Jesse. Task number must be an integer."],
+        ["Precision matters, Jesse. Task number must be an integer."],
+        ["Precision matters, Jesse. Task number must be an integer."],
+        ["Precision matters, Jesse. Task number is out of range."],
+        ["Precision matters, Jesse. Task number is out of range."],
+        ["Precision matters, Jesse. Task number is out of range."],
+        ["Precision matters, Jesse. Task number must be an integer."],
+        ["Precision matters, Jesse. Task number must be an integer."],
+        ["Precision matters, Jesse. Task number must be an integer."],
+        ["Precision matters, Jesse. Task number is out of range."],
         [
-          "Walter has marked this task as done:",
+          "Done. Consider this one handled:",
           "[T][X] read book"
         ],
         [
-          "Jesse, here's what we've got on the board:",
+          "Here is the current operation:",
           "1. [T][X] read book"
         ],
-        ["Walter: Bye. Hope to see you again soon!"]
+        ["All right. The operation is closed. Stay focused, Jesse."]
       ]
     },
     {
@@ -461,30 +461,30 @@ Expected responses omit the surrounding separator lines.
         "bye"
       ],
       "expected_outputs": [
-        ["Todo description cannot be empty."],
+        ["Precision matters, Jesse. Todo description cannot be empty."],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[T][ ] read book",
-          "Now you have 1 task in the list."
+          "The list now contains 1 task."
         ],
-        ["Deadline requires /by."],
+        ["Precision matters, Jesse. Deadline requires /by."],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[D][ ] return book (by: Aug 30 2026)",
-          "Now you have 2 tasks in the list."
+          "The list now contains 2 tasks."
         ],
-        ["Task number must be an integer."],
+        ["Precision matters, Jesse. Task number must be an integer."],
         [
-          "Walter has marked this task as done:",
+          "Done. Consider this one handled:",
           "[T][X] read book"
         ],
-        ["Unknown command."],
+        ["Precision matters, Jesse. Unknown command."],
         [
-          "Jesse, here's what we've got on the board:",
+          "Here is the current operation:",
           "1. [T][X] read book",
           "2. [D][ ] return book (by: Aug 30 2026)"
         ],
-        ["Walter: Bye. Hope to see you again soon!"]
+        ["All right. The operation is closed. Stay focused, Jesse."]
       ]
     },
     {
@@ -504,50 +504,50 @@ Expected responses omit the surrounding separator lines.
       ],
       "expected_outputs": [
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[T][ ] read book",
-          "Now you have 1 task in the list."
+          "The list now contains 1 task."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[D][ ] return book (by: Aug 30 2026)",
-          "Now you have 2 tasks in the list."
+          "The list now contains 2 tasks."
         ],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[E][ ] project meeting (at: Mon 2-4pm)",
-          "Now you have 3 tasks in the list."
+          "The list now contains 3 tasks."
         ],
         [
-          "Jesse, here's what we've got on the board:",
+          "Here is the current operation:",
           "1. [T][ ] read book",
           "2. [D][ ] return book (by: Aug 30 2026)",
           "3. [E][ ] project meeting (at: Mon 2-4pm)"
         ],
         [
-          "Walter has marked this task as done:",
+          "Done. Consider this one handled:",
           "[D][X] return book (by: Aug 30 2026)"
         ],
         [
-          "Walter has removed this task:",
+          "Done. I've removed this from the list:",
           "[T][ ] read book",
-          "Now you have 2 tasks in the list."
+          "The list now contains 2 tasks."
         ],
         [
-          "Jesse, here's what we've got on the board:",
+          "Here is the current operation:",
           "1. [D][X] return book (by: Aug 30 2026)",
           "2. [E][ ] project meeting (at: Mon 2-4pm)"
         ],
         [
-          "Walter has removed this task:",
+          "Done. I've removed this from the list:",
           "[E][ ] project meeting (at: Mon 2-4pm)",
-          "Now you have 1 task in the list."
+          "The list now contains 1 task."
         ],
         [
-          "Jesse, here's what we've got on the board:",
+          "Here is the current operation:",
           "1. [D][X] return book (by: Aug 30 2026)"
         ],
-        ["Walter: Bye. Hope to see you again soon!"]
+        ["All right. The operation is closed. Stay focused, Jesse."]
       ]
     },
     {
@@ -586,40 +586,40 @@ Expected responses omit the surrounding separator lines.
         "bye"
       ],
       "expected_outputs": [
-        ["Task number is out of range."],
-        ["Jesse, the board's clean. Nothing to do."],
+        ["Precision matters, Jesse. Task number is out of range."],
+        ["The board is clean. Nothing needs doing."],
         [
-          "Walter has added this task:",
+          "Good. That's on the list now:",
           "[T][ ] keep me",
-          "Now you have 1 task in the list."
+          "The list now contains 1 task."
         ],
-        ["Task number is required."],
-        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
-        ["Task number is required."],
-        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
-        ["Task number must be an integer."],
-        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
-        ["Task number must be an integer."],
-        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
-        ["Task number must be an integer."],
-        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
-        ["Task number is out of range."],
-        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
-        ["Task number is out of range."],
-        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
-        ["Task number is out of range."],
-        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
-        ["Task number must be an integer."],
-        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
-        ["Task number must be an integer."],
-        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
-        ["Unknown command."],
-        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
-        ["Unknown command."],
-        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
-        ["Unknown command."],
-        ["Jesse, here's what we've got on the board:", "1. [T][ ] keep me"],
-        ["Walter: Bye. Hope to see you again soon!"]
+        ["Precision matters, Jesse. Task number is required."],
+        ["Here is the current operation:", "1. [T][ ] keep me"],
+        ["Precision matters, Jesse. Task number is required."],
+        ["Here is the current operation:", "1. [T][ ] keep me"],
+        ["Precision matters, Jesse. Task number must be an integer."],
+        ["Here is the current operation:", "1. [T][ ] keep me"],
+        ["Precision matters, Jesse. Task number must be an integer."],
+        ["Here is the current operation:", "1. [T][ ] keep me"],
+        ["Precision matters, Jesse. Task number must be an integer."],
+        ["Here is the current operation:", "1. [T][ ] keep me"],
+        ["Precision matters, Jesse. Task number is out of range."],
+        ["Here is the current operation:", "1. [T][ ] keep me"],
+        ["Precision matters, Jesse. Task number is out of range."],
+        ["Here is the current operation:", "1. [T][ ] keep me"],
+        ["Precision matters, Jesse. Task number is out of range."],
+        ["Here is the current operation:", "1. [T][ ] keep me"],
+        ["Precision matters, Jesse. Task number must be an integer."],
+        ["Here is the current operation:", "1. [T][ ] keep me"],
+        ["Precision matters, Jesse. Task number must be an integer."],
+        ["Here is the current operation:", "1. [T][ ] keep me"],
+        ["Precision matters, Jesse. Unknown command."],
+        ["Here is the current operation:", "1. [T][ ] keep me"],
+        ["Precision matters, Jesse. Unknown command."],
+        ["Here is the current operation:", "1. [T][ ] keep me"],
+        ["Precision matters, Jesse. Unknown command."],
+        ["Here is the current operation:", "1. [T][ ] keep me"],
+        ["All right. The operation is closed. Stay focused, Jesse."]
       ]
     },
     {
@@ -642,39 +642,39 @@ Expected responses omit the surrounding separator lines.
         "bye"
       ],
       "expected_outputs": [
-        ["Jesse, we don't have any places saved yet."],
+        ["The location list is empty."],
         [
-          "Walter has saved this place:",
+          "Good. I've recorded this location:",
           "Alex's home — 123 Clementi Ave 3",
-          "Now you have 1 saved place."
+          "The location list now contains 1 place."
         ],
         [
-          "Walter has saved this place:",
+          "Good. I've recorded this location:",
           "NUS Central Library — 12 Computing Drive",
-          "Now you have 2 saved places."
+          "The location list now contains 2 places."
         ],
         [
-          "Jesse, here are the places we've saved:",
+          "Here are the recorded locations:",
           "1. Alex's home — 123 Clementi Ave 3",
           "2. NUS Central Library — 12 Computing Drive"
         ],
-        ["Place name cannot be empty."],
-        ["Place requires exactly one /at."],
-        ["Place name cannot be empty."],
-        ["Place address cannot be empty."],
-        ["Place requires exactly one /at."],
-        ["Place number must be an integer."],
-        ["Place number is out of range."],
+        ["Precision matters, Jesse. Place name cannot be empty."],
+        ["Precision matters, Jesse. Place requires exactly one /at."],
+        ["Precision matters, Jesse. Place name cannot be empty."],
+        ["Precision matters, Jesse. Place address cannot be empty."],
+        ["Precision matters, Jesse. Place requires exactly one /at."],
+        ["Precision matters, Jesse. Place number must be an integer."],
+        ["Precision matters, Jesse. Place number is out of range."],
         [
-          "Walter has removed this place:",
+          "Done. I've removed this location:",
           "Alex's home — 123 Clementi Ave 3",
-          "Now you have 1 saved place."
+          "The location list now contains 1 place."
         ],
         [
-          "Jesse, here are the places we've saved:",
+          "Here are the recorded locations:",
           "1. NUS Central Library — 12 Computing Drive"
         ],
-        ["Walter: Bye. Hope to see you again soon!"]
+        ["All right. The operation is closed. Stay focused, Jesse."]
       ]
     }
   ]

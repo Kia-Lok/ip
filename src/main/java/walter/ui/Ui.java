@@ -81,8 +81,8 @@ public class Ui {
     public void showWelcome(String loadWarning) {
         showSeparator();
         output.print(BANNER);
-        output.println("Howdy! I'm Walter!");
-        output.println("What can I do for you?");
+        output.println("Jesse, focus. I'm Walter.");
+        output.println("Tell me what needs doing. We'll keep the operation precise.");
         if (loadWarning != null) {
             output.println(loadWarning);
         }
@@ -100,7 +100,7 @@ public class Ui {
      * Displays Walter's exit message and closing separator.
      */
     public void showGoodbye() {
-        output.println("Walter: Bye. Hope to see you again soon!");
+        output.println("All right. The operation is closed. Stay focused, Jesse.");
         if (isTerminal) {
             showSeparator();
         }
@@ -112,7 +112,7 @@ public class Ui {
      * @param message Error message to display.
      */
     public void showError(String message) {
-        output.println(message);
+        output.println("Precision matters, Jesse. " + message);
     }
 
     /**
@@ -122,11 +122,11 @@ public class Ui {
      */
     public void showTaskList(List<Task> tasks) {
         if (tasks.isEmpty()) {
-            output.println("Jesse, the board's clean. Nothing to do.");
+            output.println("The board is clean. Nothing needs doing.");
             return;
         }
 
-        output.println("Jesse, here's what we've got on the board:");
+        output.println("Here is the current operation:");
         showNumberedTasks(tasks);
     }
 
@@ -139,11 +139,11 @@ public class Ui {
     public void showDeadlinesOn(LocalDate date, List<Deadline> deadlines) {
         String displayDate = date.format(DATE_DISPLAY_FORMATTER);
         if (deadlines.isEmpty()) {
-            output.println("There are no deadlines on " + displayDate + ".");
+            output.println("No deadlines are scheduled for " + displayDate + ".");
             return;
         }
 
-        output.println("Here are the deadlines on " + displayDate + ":");
+        output.println("Here is the schedule for " + displayDate + ":");
         showNumberedTasks(deadlines);
     }
 
@@ -152,11 +152,11 @@ public class Ui {
      */
     public void showFindResults(List<Task> matches) {
         if (matches.isEmpty()) {
-            output.println("There are no tasks matching that keyword.");
+            output.println("I found no tasks matching that keyword.");
             return;
         }
 
-        output.println("Here are the matching tasks in your list:");
+        output.println("Here's what I found:");
         showNumberedTasks(matches);
     }
 
@@ -167,11 +167,11 @@ public class Ui {
      */
     public void showPlaces(List<Place> places) {
         if (places.isEmpty()) {
-            output.println("Jesse, we don't have any places saved yet.");
+            output.println("The location list is empty.");
             return;
         }
 
-        output.println("Jesse, here are the places we've saved:");
+        output.println("Here are the recorded locations:");
         for (int i = 0; i < places.size(); i++) {
             output.println((i + 1) + ". " + places.get(i));
         }
@@ -195,7 +195,7 @@ public class Ui {
      * @param taskCount Number of tasks after the addition.
      */
     public void showAddedTask(Task task, int taskCount) {
-        output.println("Walter has added this task:");
+        output.println("Good. That's on the list now:");
         output.println(task);
         showTaskCount(taskCount);
     }
@@ -207,7 +207,7 @@ public class Ui {
      * @param taskCount Number of tasks after the deletion.
      */
     public void showDeletedTask(Task task, int taskCount) {
-        output.println("Walter has removed this task:");
+        output.println("Done. I've removed this from the list:");
         output.println(task);
         showTaskCount(taskCount);
     }
@@ -219,7 +219,7 @@ public class Ui {
      * @param placeCount Number of places after the addition.
      */
     public void showAddedPlace(Place place, int placeCount) {
-        output.println("Walter has saved this place:");
+        output.println("Good. I've recorded this location:");
         output.println(place);
         showPlaceCount(placeCount);
     }
@@ -231,7 +231,7 @@ public class Ui {
      * @param placeCount Number of places after the deletion.
      */
     public void showDeletedPlace(Place place, int placeCount) {
-        output.println("Walter has removed this place:");
+        output.println("Done. I've removed this location:");
         output.println(place);
         showPlaceCount(placeCount);
     }
@@ -242,7 +242,7 @@ public class Ui {
      * @param task Task whose status was changed.
      */
     public void showMarkedTask(Task task) {
-        output.println("Walter has marked this task as done:");
+        output.println("Done. Consider this one handled:");
         output.println(task);
     }
 
@@ -252,7 +252,7 @@ public class Ui {
      * @param task Task whose status was changed.
      */
     public void showUnmarkedTask(Task task) {
-        output.println("Walter has marked this task as not done yet:");
+        output.println("Understood. This goes back into the mix:");
         output.println(task);
     }
 
@@ -263,7 +263,7 @@ public class Ui {
      */
     private void showTaskCount(int taskCount) {
         String taskWord = taskCount == 1 ? "task" : "tasks";
-        output.println("Now you have " + taskCount + " " + taskWord + " in the list.");
+        output.println("The list now contains " + taskCount + " " + taskWord + ".");
     }
 
     /**
@@ -271,6 +271,6 @@ public class Ui {
      */
     private void showPlaceCount(int placeCount) {
         String placeWord = placeCount == 1 ? "place" : "places";
-        output.println("Now you have " + placeCount + " saved " + placeWord + ".");
+        output.println("The location list now contains " + placeCount + " " + placeWord + ".");
     }
 }

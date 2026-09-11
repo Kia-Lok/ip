@@ -90,46 +90,10 @@ public class Walter {
                 lastCommandCategory = command.getCategory();
             } catch (DukeException exception) {
                 lastCommandCategory = CommandCategory.ERROR;
-                responseUi.showError(getGuiErrorMessage(exception.getMessage()));
+                responseUi.showError(exception.getMessage());
             }
         }
         return responseBytes.toString(StandardCharsets.UTF_8).stripTrailing();
-    }
-
-    /**
-     * Gives known GUI errors themed wording without changing parser or command semantics.
-     * Specific syntax diagnostics remain unchanged when collapsing them would lose useful detail.
-     *
-     * @param message Original error message produced by the application core.
-     * @return Error text suitable for Walter's GUI response bubble.
-     */
-    private String getGuiErrorMessage(String message) {
-        if (message.equals("Unknown command.")) {
-            return "Jesse, stop giving me unknown commands.";
-        }
-        if (message.equals("Task number is required.")
-                || message.equals("Task number must be an integer.")
-                || message.equals("Task number is out of range.")) {
-            return "Jesse, that task doesn't exist.";
-        }
-        if (message.equals("Todo description cannot be empty.")
-                || message.equals("Deadline description cannot be empty.")
-                || message.equals("Event description cannot be empty.")) {
-            return "Jesse, I need a task. Give me something to work with.";
-        }
-        if (message.equals("Deadline date/time cannot be empty.")
-                || message.equals("Deadline date must be in yyyy-MM-dd format.")
-                || message.equals("Event date/time cannot be empty.")
-                || message.equals("Event start cannot be empty.")
-                || message.equals("Event end cannot be empty.")
-                || message.equals("Date is required for the on command.")
-                || message.equals("Date must be in yyyy-MM-dd format.")) {
-            return "Jesse, that date makes no sense.";
-        }
-        if (message.startsWith("Walter could not save")) {
-            return "Jesse, something went wrong.";
-        }
-        return message;
     }
 
     /**
