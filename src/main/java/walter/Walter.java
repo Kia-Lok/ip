@@ -22,6 +22,7 @@ public class Walter {
     private TaskList tasks;
     private String loadWarning;
     private CommandCategory lastCommandCategory = CommandCategory.NORMAL;
+    private boolean lastCommandWasExit;
 
     /**
      * Creates Walter and loads any tasks saved by an earlier run.
@@ -76,6 +77,7 @@ public class Walter {
      */
     public String getResponse(String input) {
         lastCommandCategory = CommandCategory.NORMAL;
+        lastCommandWasExit = false;
         ByteArrayOutputStream responseBytes = new ByteArrayOutputStream();
         try (PrintStream responseOutput = new PrintStream(
                 responseBytes, true, StandardCharsets.UTF_8)) {
@@ -84,6 +86,7 @@ public class Walter {
                 Command command = Parser.parse(input);
                 command.execute(tasks, responseUi, storage);
                 lastCommandCategory = command.getCategory();
+                lastCommandWasExit = command.isExit();
             } catch (DukeException exception) {
                 lastCommandCategory = CommandCategory.ERROR;
                 responseUi.showError(exception.getMessage());
@@ -100,6 +103,15 @@ public class Walter {
      */
     public CommandCategory getLastCommandCategory() {
         return lastCommandCategory;
+    }
+
+    /**
+     * Reports whether the most recently processed GUI command requested application exit.
+     *
+     * @return {@code true} only when the latest successfully executed command was {@code bye}.
+     */
+    public boolean wasLastCommandExit() {
+        return lastCommandWasExit;
     }
 
     /**

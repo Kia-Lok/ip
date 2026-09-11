@@ -1,6 +1,7 @@
 package walter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -105,6 +106,17 @@ public class WalterTest {
 
         assertEquals("All right. The operation is closed. Stay focused, Jesse.",
                 walter.getResponse("bye"));
+        assertTrue(walter.wasLastCommandExit());
+    }
+
+    @Test
+    public void wasLastCommandExit_commandAfterBye_exitStateReset() {
+        Walter walter = createWalter();
+        walter.getResponse("bye");
+
+        walter.getResponse("list");
+
+        assertFalse(walter.wasLastCommandExit());
     }
 
     @Test

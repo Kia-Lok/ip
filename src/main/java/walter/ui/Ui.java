@@ -149,6 +149,8 @@ public class Ui {
 
     /**
      * Displays tasks whose descriptions matched a find keyword.
+     *
+     * @param matches Matching tasks in display order.
      */
     public void showFindResults(List<Task> matches) {
         if (matches.isEmpty()) {

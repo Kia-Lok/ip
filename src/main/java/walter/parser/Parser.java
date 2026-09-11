@@ -46,46 +46,22 @@ public class Parser {
         }
         String command = normalize(input);
         String commandWord = getCommandWord(command);
-        if (commandWord.equals("list") && isExactCommand(command, "list")) {
-            return new ListCommand();
-        }
-        if (commandWord.equals("places") && isExactCommand(command, "places")) {
-            return new ListPlacesCommand();
-        }
-        if (commandWord.equals("bye") && isExactCommand(command, "bye")) {
-            return new ExitCommand();
-        }
-        if (commandWord.equals("on")) {
-            return new OnCommand(parseOnDate(command));
-        }
-        if (commandWord.equals("find")) {
-            return new FindCommand(parseFindKeyword(command));
-        }
-        if (commandWord.equals("done") || commandWord.equals("mark")) {
-            return new MarkCommand(parseTaskIndex(command));
-        }
-        if (commandWord.equals("unmark")) {
-            return new UnmarkCommand(parseTaskIndex(command));
-        }
-        if (commandWord.equals("delete")) {
-            return new DeleteCommand(parseTaskIndex(command));
-        }
-        if (commandWord.equals("deleteplace")) {
-            return new DeletePlaceCommand(parsePlaceIndex(command));
-        }
-        if (commandWord.equals("todo")) {
-            return new AddCommand(parseTodo(command));
-        }
-        if (commandWord.equals("deadline")) {
-            return new AddCommand(parseDeadline(command));
-        }
-        if (commandWord.equals("event")) {
-            return new AddCommand(parseEvent(command));
-        }
-        if (commandWord.equals("place")) {
-            return new AddPlaceCommand(parsePlace(command));
-        }
-        throw new DukeException("Unknown command.");
+        return switch (commandWord) {
+            case "list" -> parseExactCommand(command, "list", new ListCommand());
+            case "places" -> parseExactCommand(command, "places", new ListPlacesCommand());
+            case "bye" -> parseExactCommand(command, "bye", new ExitCommand());
+            case "on" -> new OnCommand(parseOnDate(command));
+            case "find" -> new FindCommand(parseFindKeyword(command));
+            case "done", "mark" -> new MarkCommand(parseTaskIndex(command));
+            case "unmark" -> new UnmarkCommand(parseTaskIndex(command));
+            case "delete" -> new DeleteCommand(parseTaskIndex(command));
+            case "deleteplace" -> new DeletePlaceCommand(parsePlaceIndex(command));
+            case "todo" -> new AddCommand(parseTodo(command));
+            case "deadline" -> new AddCommand(parseDeadline(command));
+            case "event" -> new AddCommand(parseEvent(command));
+            case "place" -> new AddPlaceCommand(parsePlace(command));
+            default -> throw new DukeException("Unknown command.");
+        };
     }
 
     /**
@@ -99,14 +75,20 @@ public class Parser {
     }
 
     /**
-     * Reports whether input consists of exactly one command word.
+     * Returns a no-argument command after confirming that no trailing argument was supplied.
      *
-     * @param input Input text to compare.
+     * @param input Input text to validate.
      * @param commandWord Expected command word.
-     * @return {@code true} if the normalized input equals the command word exactly.
+     * @param command Command to return after successful validation.
+     * @return Validated command.
+     * @throws DukeException If input contains anything after the command word.
      */
-    private static boolean isExactCommand(String input, String commandWord) {
-        return normalize(input).equals(commandWord);
+    private static Command parseExactCommand(String input, String commandWord, Command command)
+            throws DukeException {
+        if (!normalize(input).equals(commandWord)) {
+            throw new DukeException("Unknown command.");
+        }
+        return command;
     }
 
     /**

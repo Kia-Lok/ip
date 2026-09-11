@@ -64,6 +64,10 @@ public class MainWindow extends AnchorPane {
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getWalterDialog(response, walterImage, commandCategory));
         userInput.clear();
+        if (walter.wasLastCommandExit()) {
+            userInput.setDisable(true);
+            sendButton.setDisable(true);
+        }
     }
 
     /**

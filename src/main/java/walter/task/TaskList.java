@@ -148,6 +148,9 @@ public class TaskList {
 
     /**
      * Returns tasks whose descriptions contain the keyword, ignoring case.
+     *
+     * @param keyword Text to match against task descriptions.
+     * @return Matching tasks in their original list order.
      */
     public List<Task> find(String keyword) {
         String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);

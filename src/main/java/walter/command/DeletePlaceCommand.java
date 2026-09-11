@@ -27,6 +27,14 @@ public class DeletePlaceCommand extends Command {
         return CommandCategory.DELETE;
     }
 
+    /**
+     * Deletes the selected place, persists the updated list, and displays confirmation.
+     *
+     * @param tasks Task list supplied by the application; it is not modified.
+     * @param ui User interface used to display the deleted place.
+     * @param storage Storage used to load and persist places.
+     * @throws DukeException If the place index is invalid or places cannot be loaded or saved.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
         PlaceList places = new PlaceList(storage.loadPlaces());

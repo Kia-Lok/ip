@@ -27,6 +27,14 @@ public class AddPlaceCommand extends Command {
         return CommandCategory.ADD;
     }
 
+    /**
+     * Adds the place, persists the updated place list, and displays confirmation.
+     *
+     * @param tasks Task list supplied by the application; it is not modified.
+     * @param ui User interface used to display the saved place.
+     * @param storage Storage used to load and persist places.
+     * @throws DukeException If saved places cannot be loaded or persisted.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
         PlaceList places = new PlaceList(storage.loadPlaces());

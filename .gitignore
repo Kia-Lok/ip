@@ -16,8 +16,8 @@ bin/
 # Temp files
 _temp/
 
-# Walter task data
-/data/walter.txt
+# Walter runtime data
+/data/
 
 /text-ui-test/ACTUAL.TXT
 text-ui-test/EXPECTED-UNIX.TXT

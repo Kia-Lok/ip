@@ -25,6 +25,14 @@ public class Storage {
     private static final Path DEFAULT_SAVE_FILE = Path.of("data", "walter.txt");
     private static final Path DEFAULT_PLACE_FILE = Path.of("data", "places.txt");
     private static final String FIELD_SEPARATOR = "\t";
+    private static final String TODO_RECORD_TYPE = "T";
+    private static final String DEADLINE_RECORD_TYPE = "D";
+    private static final String EVENT_RECORD_TYPE = "E";
+    private static final String PLACE_RECORD_TYPE = "P";
+    private static final String DONE_STATUS = "1";
+    private static final String NOT_DONE_STATUS = "0";
+    private static final String EVENT_AT_FORMAT = "AT";
+    private static final String EVENT_FROM_TO_FORMAT = "FROM_TO";
 
     private final Path saveFile;
     private final Path placeFile;
@@ -135,7 +143,7 @@ public class Storage {
         for (Place place : places) {
             lines.add(String.join(
                     FIELD_SEPARATOR,
-                    "P",
+                    PLACE_RECORD_TYPE,
                     escapeField(place.getName()),
                     escapeField(place.getAddress())));
         }
@@ -156,7 +164,7 @@ public class Storage {
      */
     private Place parseStoredPlace(String line) throws DukeException {
         String[] fields = line.split(FIELD_SEPARATOR, -1);
-        if (fields.length != 3 || !fields[0].equals("P")) {
+        if (fields.length != 3 || !fields[0].equals(PLACE_RECORD_TYPE)) {
             throw new DukeException("Malformed saved place record.");
         }
         return new Place(
@@ -177,37 +185,58 @@ public class Storage {
             throw new DukeException("Malformed saved task record.");
         }
 
-        boolean isDone;
-        if (fields[1].equals("1")) {
-            isDone = true;
-        } else if (fields[1].equals("0")) {
-            isDone = false;
-        } else {
-            throw new DukeException("Malformed saved task status.");
-        }
-
-        Task task;
-        if (fields[0].equals("T") && fields.length == 3) {
-            task = new Todo(requireStoredText(fields[2]));
-        } else if (fields[0].equals("D") && fields.length == 4) {
-            task = new Deadline(
-                    requireStoredText(fields[2]), parseStoredDate(requireStoredText(fields[3])));
-        } else if (fields[0].equals("E") && fields.length == 5 && fields[2].equals("AT")) {
-            task = new Event(requireStoredText(fields[3]), requireStoredText(fields[4]));
-        } else if (fields[0].equals("E") && fields.length == 6
-                && fields[2].equals("FROM_TO")) {
-            task = new Event(
-                    requireStoredText(fields[3]),
-                    requireStoredText(fields[4]),
-                    requireStoredText(fields[5]));
-        } else {
-            throw new DukeException("Unknown saved task record.");
-        }
-
+        boolean isDone = parseStoredStatus(fields[1]);
+        Task task = createStoredTask(fields);
         if (isDone) {
             task.markAsDone();
         }
         return task;
+    }
+
+    /**
+     * Parses the completion-status field of a saved task record.
+     *
+     * @param status Stored completion-status token.
+     * @return Whether the saved task was completed.
+     * @throws DukeException If the token is not a supported task status.
+     */
+    private boolean parseStoredStatus(String status) throws DukeException {
+        if (status.equals(DONE_STATUS)) {
+            return true;
+        }
+        if (status.equals(NOT_DONE_STATUS)) {
+            return false;
+        }
+        throw new DukeException("Malformed saved task status.");
+    }
+
+    /**
+     * Creates a task from validated storage fields for one supported record type.
+     *
+     * @param fields Fields from one saved task record.
+     * @return Task represented by the fields.
+     * @throws DukeException If the task type, field count, or field content is invalid.
+     */
+    private Task createStoredTask(String[] fields) throws DukeException {
+        if (fields[0].equals(TODO_RECORD_TYPE) && fields.length == 3) {
+            return new Todo(requireStoredText(fields[2]));
+        }
+        if (fields[0].equals(DEADLINE_RECORD_TYPE) && fields.length == 4) {
+            return new Deadline(
+                    requireStoredText(fields[2]), parseStoredDate(requireStoredText(fields[3])));
+        }
+        if (fields[0].equals(EVENT_RECORD_TYPE) && fields.length == 5
+                && fields[2].equals(EVENT_AT_FORMAT)) {
+            return new Event(requireStoredText(fields[3]), requireStoredText(fields[4]));
+        }
+        if (fields[0].equals(EVENT_RECORD_TYPE) && fields.length == 6
+                && fields[2].equals(EVENT_FROM_TO_FORMAT)) {
+            return new Event(
+                    requireStoredText(fields[3]),
+                    requireStoredText(fields[4]),
+                    requireStoredText(fields[5]));
+        }
+        throw new DukeException("Unknown saved task record.");
     }
 
     /**
@@ -218,25 +247,27 @@ public class Storage {
      * @throws DukeException If the task has an unsupported runtime type.
      */
     private String toStoredTask(Task task) throws DukeException {
-        String status = task.isDone() ? "1" : "0";
+        String status = task.isDone() ? DONE_STATUS : NOT_DONE_STATUS;
         String description = escapeField(task.getDescription());
         if (task instanceof Todo) {
-            return String.join(FIELD_SEPARATOR, "T", status, description);
+            return String.join(FIELD_SEPARATOR, TODO_RECORD_TYPE, status, description);
         }
         if (task instanceof Deadline deadline) {
             return String.join(
-                    FIELD_SEPARATOR, "D", status, description, deadline.getBy().toString());
+                    FIELD_SEPARATOR, DEADLINE_RECORD_TYPE, status, description,
+                    deadline.getBy().toString());
         }
         if (task instanceof Event event && event.isAtFormat()) {
             return String.join(
-                    FIELD_SEPARATOR, "E", status, "AT", description, escapeField(event.getAt()));
+                    FIELD_SEPARATOR, EVENT_RECORD_TYPE, status, EVENT_AT_FORMAT, description,
+                    escapeField(event.getAt()));
         }
         if (task instanceof Event event) {
             return String.join(
                     FIELD_SEPARATOR,
-                    "E",
+                    EVENT_RECORD_TYPE,
                     status,
-                    "FROM_TO",
+                    EVENT_FROM_TO_FORMAT,
                     description,
                     escapeField(event.getFrom()),
                     escapeField(event.getTo()));
